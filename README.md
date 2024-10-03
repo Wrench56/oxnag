@@ -8,4 +8,8 @@ This project is secondary, something I'm working on in my free time, as most of 
 
 ## Motivation
 
-I really enjoy 64-bit x86 NASM assembly, but Ive never worked on anything graphical with it before. OpenGL is another area I've yet to explore. Combining these two challenges is why I'm taking on this project, despite its complexity.
+I really enjoy 64-bit x86 NASM assembly, but I've never worked on anything graphical with it before. OpenGL is another area I've yet to explore. Combining these two challenges is why I'm taking on this project, despite its complexity.
+
+## Building
+
+Using `make` should be enough to build AND run the project.
