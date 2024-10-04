@@ -114,7 +114,7 @@ wcreate_win:
 
     mov             rcx, WS_EX_COMPOSITED               ; DWORD     dwExStyle
     lea             rdx, [rel wndClassName]             ; LPCSTR    lpClassName
-    mov             r9, WS_OVERLAPPEDWINDOW             ; DWORD     dwStyle
+    mov             r9, WS_POPUP | WS_VISIBLE           ; DWORD     dwStyle
     mov             dword arg(1), CW_USEDEFAULT         ; int       X
     mov             dword arg(2), CW_USEDEFAULT         ; int       Y
     mov             dword arg(3), 640                   ; int       nWidth
@@ -141,7 +141,7 @@ wshow_win:
     enter           32, 0
     mov             rbx, rcx
 
-    mov             rdx, SW_SHOWNORMAL
+    mov             rdx, SW_SHOWMAXIMIZED
     call            ShowWindow
 
     mov             rcx, rbx                            ; HINSTANCE hInstance
