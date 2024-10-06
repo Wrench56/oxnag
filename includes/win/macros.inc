@@ -1,8 +1,11 @@
 %include "includes/win/typedef.inc"
+%include "includes/win/winuser.inc"
 
 extern MessageBoxA
 extern GetLastError
 extern ExitProcess
+
+extern glGetError
 
 %macro mMessageBoxA 3
     mov     rcx, NULL
@@ -12,8 +15,16 @@ extern ExitProcess
     call    MessageBoxA
 %endmacro
 
-%macro fatal_error 2
+%macro wfatal_error 2
     call            GetLastError
+    mov             rbx, rax
+    mMessageBoxA    %1, %2,  MB_ICONEXCLAMATION | MB_OK
+    mov             rcx, rbx
+    call            ExitProcess
+%endmacro
+
+%macro glfatal_error 2
+    call            glGetError
     mov             rbx, rax
     mMessageBoxA    %1, %2,  MB_ICONEXCLAMATION | MB_OK
     mov             rcx, rbx

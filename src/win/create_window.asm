@@ -12,10 +12,6 @@ extern DestroyWindow
 extern PostQuitMessage
 extern DefWindowProcA
 
-extern ExitProcess
-extern print
-extern GetLastError
-
 ; ===== [ INCLUDES ] =====
 %include "includes/win/winuser.inc"
 %include "includes/win/macros.inc"
@@ -94,7 +90,7 @@ wregister_win_class:
     cmp             rax, 0
     jne              .exit
 
-    fatal_error     mbFatalTitle, mbRegErrMessage
+    wfatal_error     mbFatalTitle, mbRegErrMessage
 
 .exit:
     leave
@@ -128,7 +124,7 @@ wcreate_win:
     cmp             rax, 0
     jne             .exit
 
-    fatal_error     mbFatalTitle, mbIniErrMessage
+    wfatal_error     mbFatalTitle, mbIniErrMessage
 
 .exit:
     leave
