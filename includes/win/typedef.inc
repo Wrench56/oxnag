@@ -11,8 +11,12 @@
 %define NULL        0
 
 %define WNDPROC     PTR
+
+%define BYTE_       resb 1
 %define UINT        resd 1
 %define INT_        resd 1
+%define WORD_       resw 1
+%define DWORD_      resd 1
 %define ATOM        resw 1
 
 %define LPCSTR      PTR
