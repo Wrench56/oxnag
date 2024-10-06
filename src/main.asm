@@ -6,9 +6,12 @@ extern wcreate_win
 extern wshow_win
 extern wmainloop_win
 
+extern wgl_spfd
+extern wgl_init_context
+
 extern ExitProcess
 extern GetModuleHandleA
-extern wndproc_callback
+extern GetDC
 
 ; ===== [ INCLUDES ] =====
 
@@ -24,6 +27,8 @@ section .data
     wndTitle            db "OxNAG", 0
     hInstance           dd 0
     hWnd                dd 0
+    hDc                 dd 0
+    hRC                 dd 0
 
 
 ; ===== [  .TEXT   ] =====
@@ -47,6 +52,20 @@ _start:
     lea         rdx, [rel wndTitle]
     call        wcreate_win
     mov         [rel hWnd], rax
+
+    mov         rcx, [rel hWnd]
+    call        GetDC
+    mov         [rel hDc], rax
+
+    ; Choose pixel settings
+    mov         rcx, rax
+    call        wgl_spfd
+
+    ; Init Rendering Context
+    mov         rcx, [rel hDc]
+    call        wgl_init_context
+
+    mov         [rel hRC], rax
 
     ; Show window
     mov         rcx, rax
