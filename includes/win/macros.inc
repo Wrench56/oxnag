@@ -23,7 +23,7 @@ extern glGetError
     call            ExitProcess
 %endmacro
 
-%macro glfatal_error 2
+%macro wglfatal_error 2
     call            glGetError
     mov             rbx, rax
     mMessageBoxA    %1, %2,  MB_ICONEXCLAMATION | MB_OK

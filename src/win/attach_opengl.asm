@@ -115,7 +115,7 @@ wgl_init_context:
     ret
 
 .fatal_create_context:
-    glfatal_error    mbFatalTitle, mbCCErrMessage
+    wglfatal_error   mbFatalTitle, mbCCErrMessage
 
 .fatal_make_current:
-    glfatal_error    mbFatalTitle, mbMCErrMessage
+    wglfatal_error   mbFatalTitle, mbMCErrMessage
