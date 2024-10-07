@@ -2,15 +2,21 @@
 extern LoadIconA
 extern LoadCursorA
 extern RegisterClassExA
+
 extern CreateWindowExA
-extern ShowWindow
-extern UpdateWindow
+
 extern GetMessageA
 extern TranslateMessage
+
 extern DispatchMessageA
 extern DestroyWindow
 extern PostQuitMessage
 extern DefWindowProcA
+
+extern ShowWindow
+extern UpdateWindow
+extern SetFocus
+extern SetForegroundWindow
 
 ; ===== [ INCLUDES ] =====
 %include "includes/win/winuser.inc"
@@ -142,6 +148,12 @@ wshow_win:
 
     mov             rcx, rbx                            ; HINSTANCE hInstance
     call            UpdateWindow
+
+    mov             rcx, rbx
+    call            SetFocus
+
+    mov             rcx, rbx
+    call            SetForegroundWindow
 
     leave
     ret
