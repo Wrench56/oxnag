@@ -214,6 +214,98 @@
 %define MB_MODEMASK                     0x00003000
 %define MB_MISCMASK                     0x0000C000
 
+; ===== PeekMessage options ===== ;
+%define PM_NOREMOVE		                0x0000
+%define PM_REMOVE		                0x0001
+%define PM_NOYIELD		                0x0002
+
+; ===== Window messages ===== ;
+%define WM_NULL                         0x0000
+%define WM_CREATE                       0x0001
+%define WM_DESTROY                      0x0002
+%define WM_NCDESTROY			        WM_DESTROY
+%define WM_MOVE                         0x0003
+%define WM_SIZE                         0x0005
+%define WM_ACTIVATE                     0x0006
+%define WM_SETFOCUS                     0x0007
+%define WM_KILLFOCUS                    0x0008
+%define WM_ENABLE                       0x000A
+%define WM_SETREDRAW					0x000B
+%define WM_SETTEXT                      0x000C
+%define WM_GETTEXT                      0x000D
+%define WM_GETTEXTLENGTH                0x000E
+%define WM_PAINT                        0x000F
+%define WM_CLOSE                        0x0010
+%define WM_QUIT                         0x0012
+%define WM_ERASEBKGND                   0x0014
+%define WM_SHOWWINDOW                   0x0018
+%define WM_CTLCOLOR                     0x0019
+%define WM_NEXTDLGCTL                   0x0028
+%define WM_DRAWITEM                     0x002B
+%define WM_MEASUREITEM                  0x002C
+%define WM_DELETEITEM 					0x002D
+%define WM_VKEYTOITEM					0x002E
+%define WM_CHARTOITEM					0x002F
+%define WM_SETFONT          		    0x0030
+%define WM_GETFONT      		        0x0031
+%define WM_COMPAREITEM					0x0039
+%define WM_WINDOWPOSCHANGED             0x0047
+%define WM_NOTIFY                       0x004E
+%define WM_NCCALCSIZE                   0x0083
+%define WM_NCHITTEST                    0x0084
+%define WM_NCPAINT                      0x0085
+%define WM_GETDLGCODE                   0x0087
+%define WM_NCMOUSEMOVE                  0x00A0
+%define WM_NCLBUTTONDOWN                0x00A1
+%define WM_NCLBUTTONUP                  0x00A2
+%define WM_NCLBUTTONDBLCLK              0x00A3
+%define WM_NCRBUTTONDOWN                0x00A4
+%define WM_NCRBUTTONUP                  0x00A5
+%define WM_NCRBUTTONDBLCLK              0x00A6
+%define WM_KEYFIRST                     0x0100
+%define WM_KEYDOWN                      0x0100
+%define WM_KEYUP                        0x0101
+%define WM_CHAR                         0x0102
+%define WM_DEADCHAR                     0x0103
+%define WM_SYSKEYDOWN                   0x0104
+%define WM_SYSKEYUP                     0x0105
+%define WM_SYSCHAR                      0x0106
+%define WM_SYSDEADCHAR                  0x0107
+%define WM_KEYLAST                      0x0108
+%define WM_INITDIALOG	                0x0110
+%define WM_COMMAND                      0x0111
+%define WM_SYSCOMMAND                   0x0112
+%define WM_TIMER                        0x0113
+%define WM_HSCROLL                      0x0114
+%define WM_VSCROLL                      0x0115
+
+%define WM_ENTERIDLE                    0x0121
+
+%define WM_CTLCOLORMSGBOX               0x0132
+%define WM_CTLCOLOREDIT                 0x0133
+%define WM_CTLCOLORLISTBOX              0x0134
+%define WM_CTLCOLORBTN                  0x0135
+%define WM_CTLCOLORDLG                  0x0136
+%define WM_CTLCOLORSCROLLBAR            0x0137
+%define WM_CTLCOLORSTATIC               0x0138
+
+%define WM_MOUSEFIRST                   0x0200
+%define WM_MOUSEMOVE                    0x0200
+%define WM_LBUTTONDOWN                  0x0201
+%define WM_LBUTTONUP                    0x0202
+%define WM_LBUTTONDBLCLK                0x0203
+%define WM_RBUTTONDOWN                  0x0204
+%define WM_RBUTTONUP                    0x0205
+%define WM_RBUTTONDBLCLK                0x0206
+%define WM_MBUTTONDOWN                  0x0207
+%define WM_MBUTTONUP                    0x0208
+%define WM_MBUTTONDBLCLK                0x0209
+%define WM_MOUSEWHEEL                   0x020A
+%define WM_MOUSELAST                    0x020A
+%define WM_HOTKEY                       0x0312
+
+%define WM_USER                         0x0400
+
 struc tagWNDCLASSEXA
     .cbSize:                            UINT
     .style:                             UINT
@@ -227,4 +319,14 @@ struc tagWNDCLASSEXA
     .lpszMenuName:                      LPCSTR
     .lpszClassName:                     LPCSTR
     .hIconSm:                           HICON
+endstruc
+
+struc tagMSG
+    .hwnd:                              HWND
+    .message:                           UINT
+    .wParam:                            WPARAM
+    .lParam:                            LPARAM
+    .time:                              DWORD_
+    .pt:                                POINT
+    .lPrivate:                          DWORD_
 endstruc

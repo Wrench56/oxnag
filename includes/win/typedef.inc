@@ -21,6 +21,10 @@
 
 %define LPCSTR      PTR
 
+%define WPARAM      PTR
+%define LPARAM      PTR
+%define POINT       PTR
+
 ; Handles
 %define HANDLE      PTR
 
@@ -28,3 +32,4 @@
 %define HICON       HANDLE
 %define HCURSOR     HICON
 %define HBRUSH      HANDLE
+%define HWND        HANDLE

@@ -4,12 +4,13 @@ CPU X64
 extern wregister_win_class
 extern wcreate_win
 extern wshow_win
-extern wmainloop_win
 
 extern wgl_spfd
 extern wgl_init_context
 
 extern glinit
+
+extern mainloop
 
 extern ExitProcess
 extern GetModuleHandleA
@@ -75,8 +76,8 @@ _start:
 
     call        glinit
 
-    ; Run window
-    call        wmainloop_win
+    ; Run mainloop
+    call        mainloop
 
     call         _exit
 

@@ -5,10 +5,10 @@ extern RegisterClassExA
 
 extern CreateWindowExA
 
-extern GetMessageA
+extern PeekMessageA
 extern TranslateMessage
-
 extern DispatchMessageA
+
 extern DestroyWindow
 extern PostQuitMessage
 extern DefWindowProcA
@@ -158,22 +158,27 @@ wshow_win:
     leave
     ret
 
+; RETURNS: RAX BOOL wm_quit (1)
+extern whandle_win_events
+whandle_win_events:
+    enter           32 + 8, 0
 
-extern wmainloop_win
-wmainloop_win:
-    enter           32, 0
-
-.while_loop:
     lea             rcx, [rel eventMessage]             ; LPMSG lpMsg
     mov             rdx, NULL                           ; HWND hWnd
     mov             r8, 0                               ; UINT wMsgFilterMin
     mov             r9, 0                               ; UINT wMsgFilterMin
+    mov             dword arg(1), PM_REMOVE             ; UINT wRemoveMessage
 
-    call            GetMessageA
+    call            PeekMessageA
 
-    ; Stop if GetMessage returned 0 (WM_QUIT)
+    ; Return if PeekMessage returned 0 (No new message)
     cmp             rax, 0
     je              .exit
+
+    ; Return 1 if the message is WM_QUIT
+    cmp             dword [rel eventMessage + tagMSG.message], WM_QUIT
+    je              .wm_quit
+    
 
     lea             rcx, [rel eventMessage]             ; LPMSG lpMsg
     call            TranslateMessage
@@ -181,8 +186,12 @@ wmainloop_win:
     lea             rcx, [rel eventMessage]             ; LPMSG lpMsg
     call            DispatchMessageA
 
-    ; Loop
-    jmp             .while_loop
+    jmp             .exit
+
+.wm_quit:
+    mov             rax, 1
+    jmp             .exit                               ; Not needed
+
 .exit:
     leave
     ret
