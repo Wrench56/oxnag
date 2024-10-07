@@ -9,6 +9,8 @@ extern wmainloop_win
 extern wgl_spfd
 extern wgl_init_context
 
+extern glinit
+
 extern ExitProcess
 extern GetModuleHandleA
 extern GetDC
@@ -70,6 +72,8 @@ _start:
     ; Show window
     mov         rcx, rax
     call        wshow_win
+
+    call        glinit
 
     ; Run window
     call        wmainloop_win
