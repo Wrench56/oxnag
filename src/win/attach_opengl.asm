@@ -53,11 +53,6 @@ section .data
     iend
 
 section .code
-extern wgl_attach
-wgl_attach:
-    enter           32, 0
-
-
 
 ; IN RCX : HDC deviceContext
 extern wgl_spfd
