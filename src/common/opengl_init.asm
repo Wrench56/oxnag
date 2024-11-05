@@ -17,7 +17,7 @@ section .data
     BG_RED          dd 0.0
     BG_GREEN        dd 0.0
     BG_BLUE         dd 0.0
-    BG_ALPHA        dd 0.5
+    BG_ALPHA        dd 1.0
 
     BG_CLEAR_DEPTH  dd 1.0
 

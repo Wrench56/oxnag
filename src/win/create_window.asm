@@ -111,12 +111,14 @@ extern wcreate_win
 wcreate_win:
     enter           32 + 8 * 8, 0
 
+    AdjustWindowRectEx(&WindowRect, dwStyle, FALSE, dwExStyle); 
+
     mov             qword arg(7), rcx                   ; HINSTANCE hInstance
     mov             r8, rdx                             ; LPCSTR    lpWindowName
 
-    mov             rcx, WS_EX_COMPOSITED               ; DWORD     dwExStyle
+    mov             rcx, WS_EX_APPWINDOW | WS_EX_WINDOWEDGE ; DWORD     dwExStyle
     lea             rdx, [rel wndClassName]             ; LPCSTR    lpClassName
-    mov             r9, WS_POPUP | WS_VISIBLE           ; DWORD     dwStyle
+    mov             r9, WS_OVERLAPPEDWINDOW |  WS_CLIPSIBLINGS | WS_CLIPCHILDREN            ; DWORD     dwStyle
     mov             dword arg(1), CW_USEDEFAULT         ; int       X
     mov             dword arg(2), CW_USEDEFAULT         ; int       Y
     mov             dword arg(3), 640                   ; int       nWidth
@@ -143,7 +145,7 @@ wshow_win:
     enter           32, 0
     mov             rbx, rcx
 
-    mov             rdx, SW_SHOWMAXIMIZED
+    mov             rdx, SW_SHOW
     call            ShowWindow
 
     mov             rcx, rbx                            ; HINSTANCE hInstance

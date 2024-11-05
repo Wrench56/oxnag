@@ -13,7 +13,7 @@ extern SetPixelFormat
 %include "includes/common/preprocessors.inc"
 
 
-COLOR_BITS    EQU 32
+COLOR_BITS    EQU 16
 
 section .data
     mbFatalTitle        db "Error: attach_opengl.asm", 0
@@ -42,8 +42,8 @@ section .data
         at .cAccumGreenBits,  db 0
         at .cAccumBlueBits,   db 0
         at .cAccumAlphaBits,  db 0
-        at .cDepthBits,       db 24
-        at .cStencilBits,     db 8
+        at .cDepthBits,       db 16
+        at .cStencilBits,     db 0
         at .cAuxBuffers,      db 0
         at .iLayerType,       db PFD_MAIN_PLANE
         at .bReserved,        db 0

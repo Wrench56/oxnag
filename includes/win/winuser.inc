@@ -119,6 +119,7 @@
 %define WS_EX_WINDOWEDGE                0x00000100
 %define WS_EX_CLIENTEDGE                0x00000200
 %define WS_EX_CONTEXTHELP               0x00000400
+%define WS_EX_APPWINDOW                 0x00040000
 
 %define WS_EX_COMPOSITED                0x02000000
 
