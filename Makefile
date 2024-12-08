@@ -15,8 +15,8 @@ EXE := $(BUILD_DIR)/oxnag.exe
 # Assembler and linker commands
 ASM := nasm
 ASM_FLAGS := -f win64 -g
-LINKER := polink
-LINKER_FLAGS := /ENTRY:_start /SUBSYSTEM:WINDOWS
+LINKER := link
+LINKER_FLAGS := /ENTRY:_start /SUBSYSTEM:WINDOWS /MACHINE:X64 /DEBUG
 
 .PHONY: all clean clean-artifacts run size
 all: compile link clean-artifacts run size
