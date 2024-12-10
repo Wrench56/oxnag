@@ -19,7 +19,15 @@ LINKER := link
 LINKER_FLAGS := /ENTRY:_start /SUBSYSTEM:WINDOWS /MACHINE:X64 /DEBUG
 
 .PHONY: all clean clean-artifacts run size
-all: compile link clean-artifacts run size
+all: check_duplicates compile link clean-artifacts run size
+
+check_duplicates:
+	@duplicate_files=$$(find $(SRC_DIR) -type f -name '*.asm' -exec basename {} \; | sort | uniq -d); \
+	if [ -n "$$duplicate_files" ]; then \
+		echo -e "\033[31mError\033[0m: Duplicate source filenames detected:"; \
+		echo " > $$duplicate_files"; \
+		exit 1; \
+	fi
 
 compile:
 	@$(foreach SRC,$(ASM_SRCS), \
