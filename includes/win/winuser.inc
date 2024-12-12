@@ -306,6 +306,9 @@
 
 %define WM_USER                         0x0400
 
+
+%define STD_OUTPUT_HANDLE               -11
+
 struc tagWNDCLASSEXA
     .cbSize:                            UINT
     .style:                             UINT
