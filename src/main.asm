@@ -32,7 +32,7 @@ section .data
     wndTitle            db "OxNAG", 0
     hInstance           dd 0
     hWnd                dd 0
-    hDc                 dd 0
+    hDC                 dd 0
     hRC                 dd 0
 
 
@@ -62,25 +62,26 @@ _start:
 
     mov         rcx, [rel hWnd]
     call        GetDC
-    mov         [rel hDc], rax
+    mov         [rel hDC], rax
 
     ; Choose pixel settings
     mov         rcx, rax
     call        wgl_spfd
 
     ; Init Rendering Context
-    mov         rcx, [rel hDc]
+    mov         rcx, [rel hDC]
     call        wgl_init_context
 
     mov         [rel hRC], rax
 
     ; Show window
-    mov         rcx, rax
+    mov         rcx, [rel hWnd]
     call        wshow_win
 
     call        glinit
 
     ; Run mainloop
+    mov         rcx, [rel hDC]
     call        mainloop
 
     call         _exit
