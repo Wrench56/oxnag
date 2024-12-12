@@ -16,6 +16,8 @@ extern ExitProcess
 extern GetModuleHandleA
 extern GetDC
 
+extern boot_process
+
 ; ===== [ INCLUDES ] =====
 
 %include "includes/common/preprocessors.inc"
@@ -41,6 +43,8 @@ global _start
 _start:
     sub         rbp, 8
     enter       32 + 16, 0
+
+    call        boot_process
 
     xor         rcx, rcx
     call        GetModuleHandleA
