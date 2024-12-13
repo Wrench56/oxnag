@@ -82,6 +82,9 @@
 %define COLOR_3DHILIGHT                 COLOR_BTNHIGHLIGHT
 %define COLOR_BTNHILIGHT                COLOR_BTNHIGHLIGHT
 
+%define CS_VREDRAW                      0x0001
+%define CS_HREDRAW                      0x0002
+%define CS_OWNDC                        0x0020
 
 ; ===== Window styles ===== ;
 %define WS_OVERLAPPED                   0x00000000
@@ -120,6 +123,7 @@
 %define WS_EX_CLIENTEDGE                0x00000200
 %define WS_EX_CONTEXTHELP               0x00000400
 
+%define WS_EX_APPWINDOW                 0x00040000
 %define WS_EX_COMPOSITED                0x02000000
 
 ; ===== Window Messages =====

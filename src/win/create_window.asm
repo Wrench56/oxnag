@@ -14,7 +14,6 @@ extern PostQuitMessage
 extern DefWindowProcA
 
 extern ShowWindow
-extern UpdateWindow
 extern SetFocus
 extern SetForegroundWindow
 
@@ -23,6 +22,10 @@ extern SetForegroundWindow
 %include "includes/win/macros.inc"
 
 %include "includes/common/preprocessors.inc"
+
+dwExStyle       EQU     WS_EX_APPWINDOW | WS_EX_WINDOWEDGE
+dwStyle         EQU     WS_OVERLAPPEDWINDOW | WS_CLIPSIBLINGS | WS_CLIPCHILDREN
+
 
 ; ===== [  .DATA   ] =====
 section .data
@@ -35,7 +38,7 @@ section .data
     windowClassStruct:
     istruc tagWNDCLASSEXA
         at .cbSize,          dd sizeof(tagWNDCLASSEXA)
-        at .style,           dd 0
+        at .style,           dd CS_HREDRAW | CS_VREDRAW | CS_OWNDC
         at .lpfnWndProc,     dq UNINIT
         at .cbClsExtra,      dd 0
         at .cbWndExtra,      dd 0
@@ -114,13 +117,13 @@ wcreate_win:
     mov             qword arg(7), rcx                   ; HINSTANCE hInstance
     mov             r8, rdx                             ; LPCSTR    lpWindowName
 
-    mov             rcx, WS_EX_COMPOSITED               ; DWORD     dwExStyle
+    mov             rcx, dwExStyle                      ; DWORD     dwExStyle
     lea             rdx, [rel wndClassName]             ; LPCSTR    lpClassName
-    mov             r9, WS_POPUP | WS_VISIBLE           ; DWORD     dwStyle
-    mov             dword arg(1), CW_USEDEFAULT         ; int       X
-    mov             dword arg(2), CW_USEDEFAULT         ; int       Y
-    mov             dword arg(3), 640                   ; int       nWidth
-    mov             dword arg(4), 480                   ; int       nHeight
+    mov             r9, dwStyle                         ; DWORD     dwStyle
+    mov             qword arg(1), 0                     ; int       X
+    mov             qword arg(2), 0                     ; int       Y
+    mov             qword arg(3), 640                   ; int       nWidth
+    mov             qword arg(4), 480                   ; int       nHeight
     mov             qword arg(5), NULL                  ; HWND      hWndParent
     mov             qword arg(6), NULL                  ; HMENU     hMenu
     mov             qword arg(8), NULL                  ; LPVOID    lpParam
@@ -143,11 +146,8 @@ wshow_win:
     enter           32, 0
     mov             rbx, rcx
 
-    mov             rdx, SW_SHOWMAXIMIZED
+    mov             rdx, SW_SHOW
     call            ShowWindow
-
-    mov             rcx, rbx                            ; HINSTANCE hInstance
-    call            UpdateWindow
 
     mov             rcx, rbx
     call            SetFocus
@@ -167,7 +167,7 @@ whandle_win_events:
     mov             rdx, NULL                           ; HWND hWnd
     mov             r8, 0                               ; UINT wMsgFilterMin
     mov             r9, 0                               ; UINT wMsgFilterMin
-    mov             dword arg(1), PM_REMOVE             ; UINT wRemoveMessage
+    mov             qword arg(1), PM_REMOVE             ; UINT wRemoveMessage
 
     call            PeekMessageA
 
@@ -176,7 +176,7 @@ whandle_win_events:
     je              .exit
 
     ; Return 1 if the message is WM_QUIT
-    cmp             dword [rel eventMessage + tagMSG.message], WM_QUIT
+    cmp             qword [rel eventMessage + tagMSG.message], WM_QUIT
     je              .wm_quit
     
 
