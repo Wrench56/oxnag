@@ -33,7 +33,7 @@ glinit:
 
     movss           xmm0, [rel BG_RED]
     movss           xmm1, [rel BG_GREEN]
-    movss           xmm2, [rel BG_GREEN]
+    movss           xmm2, [rel BG_BLUE]
     movss           xmm3, [rel BG_ALPHA]
     call            glClearColor
 
