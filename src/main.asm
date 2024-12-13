@@ -30,10 +30,10 @@ extern boot_process
 ; ===== [  .DATA   ] =====
 section .data
     wndTitle            db "OxNAG", 0
-    hInstance           dd 0
-    hWnd                dd 0
-    hDC                 dd 0
-    hRC                 dd 0
+    hInstance           dq 0
+    hWnd                dq 0
+    hDC                 dq 0
+    hRC                 dq 0
 
 
 ; ===== [  .TEXT   ] =====

@@ -9,7 +9,7 @@ extern AllocConsole
 
 ; ===== [  .DATA   ] =====
 section .data
-    stdout                dd 0
+    stdout                dq 0
     getStdFatalTitle      db "Error: wconsole.asm", 0
     getStdErrMessage      db "[ wload_stdout ]  Failed to get console handle", 0
 
