@@ -17,6 +17,7 @@ extern GetModuleHandleA
 extern GetDC
 
 extern boot_process
+extern gl_context_info
 
 ; ===== [ INCLUDES ] =====
 
@@ -79,6 +80,9 @@ _start:
     call        wshow_win
 
     call        glinit
+
+    ; OpenGL context info
+    call        gl_context_info
 
     ; Run mainloop
     mov         rcx, [rel hDC]
