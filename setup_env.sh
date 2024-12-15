@@ -3,7 +3,7 @@
 HOOK_DIR=".git/hooks"
 COMMIT_MSG_HOOK="$HOOK_DIR/commit-msg"
 COMMIT_MSG_HOOK_SCRIPT=$(cat <<'EOF'
-COMMITLINT_OUTPUT=$(cat "$1" | commitlint 2>&1)
+COMMITLINT_OUTPUT=$(cat "$1" | ./tools/commitlint 2>&1)
 COMMITLINT_EXIT_CODE=$?
 
 if [ $COMMITLINT_EXIT_CODE -ne 0 ]; then
@@ -25,8 +25,13 @@ if [ ! -d "$HOOK_DIR" ]; then
     exit 2
 fi
 
-# Download commitlint-rs (Rust version)
-cargo install commitlint
+# Install commitlint
+if ls tools/commitlint.* 1> /dev/null 2>&1; then
+    echo "Commitlint already installed"
+else
+    echo "Downloading commitlint..."
+    ./tools/install_commitlint.sh
+fi
 
 # Set location of git hooks
 git config --local core.hooksPath .git/hooks

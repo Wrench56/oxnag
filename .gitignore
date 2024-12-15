@@ -3,3 +3,6 @@ build
 
 # Ignore playground
 playground
+
+# Ignore commitlint executable
+tools/commitlint.*
