@@ -29,6 +29,7 @@ rules:
       - libs
       - init
       - tools
+      - utils
   subject-empty:
     level: error
   type:
