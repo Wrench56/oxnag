@@ -1,0 +1,55 @@
+extends:
+  - "@commitlint/config-conventional"
+
+parserPreset: conventional-changelog-conventionalcommits
+rules:
+  body-empty:
+    level: warning
+  description-empty:
+    level: error
+  description-format:
+    level: error
+    format: ^[a-z].*$
+  description-max-length:
+    level: error
+    length: 72
+  footers-empty:
+    level: ignore
+  scope:
+    level: error
+    optional: true
+    options:
+      - win
+      - nix
+      - build
+      - commitlint
+      - readme
+      - macros
+      - defs
+      - libs
+      - init
+      - tools
+  subject-empty:
+    level: error
+  type:
+    level: error
+    options:
+      - build
+      - chore
+      - ci
+      - docs
+      - feat
+      - fix
+      - perf
+      - refactor
+      - revert
+      - style
+      - test
+  type-empty:
+    level: error
+  type-format:
+    level: error
+    format: ^[a-z].*$
+  type-max-length:
+    level: error
+    length: 10
