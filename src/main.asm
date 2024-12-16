@@ -21,6 +21,7 @@ extern gl_context_info
 
 ; ===== [ INCLUDES ] =====
 
+%include "includes/common/macros.inc"
 %include "includes/common/preprocessors.inc"
 
 %ifidn __OUTPUT_FORMAT__, win64
@@ -43,7 +44,7 @@ section .text
 global _start
 _start:
     sub             rbp, 8
-    enter           32 + 2 * 8, 0
+    prologue        32 + 2 * 8, 0
 
     call            boot_process
 

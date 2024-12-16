@@ -7,6 +7,7 @@ extern glDepthFunc
 extern glHint
 
 ; ===== [ INCLUDES ] =====
+%include "includes/common/macros.inc"
 %include "includes/common/preprocessors.inc"
 %include "includes/common/opengl.inc"
 
@@ -14,9 +15,9 @@ extern glHint
 
 ; ===== [  .DATA   ] =====
 section .data
-    BG_RED          dd 0.0
-    BG_GREEN        dd 0.0
-    BG_BLUE         dd 0.0
+    BG_RED          dd 0.5
+    BG_GREEN        dd 0.5
+    BG_BLUE         dd 1.0
     BG_ALPHA        dd 0.5
 
     BG_CLEAR_DEPTH  dd 1.0
@@ -26,7 +27,7 @@ section .data
 section .text
 extern glinit
 glinit:
-    enter           32, 0
+    prologue        32, 0
 
     mov             rcx, GL_SMOOTH
     call            glShadeModel
@@ -50,5 +51,5 @@ glinit:
     mov             rdx, GL_NICEST
     call            glHint
 
-    leave
+    epilogue
     ret

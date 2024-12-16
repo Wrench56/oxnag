@@ -12,6 +12,7 @@ extern glGetError
     %define handle_window_event     call whandle_win_events
 %endif
 
+%include "includes/common/macros.inc"
 
 %include "includes/win/macros.inc"
 %include "includes/common/opengl.inc"   
@@ -27,7 +28,7 @@ section .text
 ; IN : RDI hDC
 extern mainloop
 mainloop:
-    enter           32, 0
+    prologue        32, 0
 
 .mloop:
     ; Call OS specific window handling
@@ -61,5 +62,5 @@ mainloop:
     wfatal_error     glFatalTitle, glErrMessage
 
 .exit:
-    leave
+    epilogue
     ret

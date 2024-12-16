@@ -48,7 +48,7 @@ section .data
 section .text
 extern boot_process
 boot_process:
-    enter           32, 0
+    prologue        32, 0
 
     ; Run OS-specific boot process
     os_spec_boot
@@ -56,12 +56,12 @@ boot_process:
     ; Bootup message
     log             header_msg, header_msg_len
 
-    leave
+    epilogue
     ret
 
 extern gl_context_info
 gl_context_info:
-    enter           32, 0
+    prologue        32, 0
 
     ; Vendor
     log             gl_vendor, gl_vendor_len
@@ -75,7 +75,7 @@ gl_context_info:
     log             new_line, 1
     log             separator, separator_len
 
-    leave
+    epilogue
     ret
 .get_string_fail:
     wfatal_error    glGetStrFatalTitle, glGetStrFatalMsg

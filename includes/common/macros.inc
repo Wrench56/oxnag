@@ -1,8 +1,8 @@
 %include "src/flags.inc"
 
 ; Arguments:
-;  > ECX: string - message
-;  > EDX: number - length of message
+;  > 1: string - message
+;  > 2: number - length of message
 %ifidn __OUTPUT_FORMAT__, win64
     extern wprint
 
@@ -14,3 +14,19 @@
         %endif
     %endmacro
 %endif
+
+; Arguments:
+;  > 1: number - stack frame size
+;  > 2: number - nesting level
+%macro prologue 2
+    %ifidn __OUTPUT_FORMAT__, win64
+        enter       %1, %2
+    %endif
+%endmacro
+
+; No arguments
+%macro epilogue 0
+    %ifidn __OUTPUT_FORMAT__, win64
+        leave
+    %endif
+%endmacro
