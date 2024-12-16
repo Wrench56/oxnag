@@ -54,21 +54,19 @@ section .data
 
 section .code
 
-; IN RCX : HDC deviceContext
+; IN RDI : HDC deviceContext
 extern wgl_spfd
 wgl_spfd:
     enter           32, 0
-    
-    ; Save hDC
-    mov             rbx, rcx
 
+    mov             rcx, rdi
     lea             rdx, [rel pfd]
     call            ChoosePixelFormat
 
     cmp             rax, 0
     je              .fatal_choose_pixel_format
 
-    mov             rcx, rbx
+    mov             rcx, rdi
     mov             rdx, rax
     lea             r8, [rel pfd]
     call            SetPixelFormat
@@ -87,24 +85,22 @@ wgl_spfd:
     wfatal_error     mbFatalTitle, mbPFSErrMessage
 
 
-; IN : RCX hDC
+; IN : RDI hDC
 extern wgl_init_context
 wgl_init_context:
     enter           32, 0
 
-    ; Save hDC
-    mov             rbx, rcx
-
+    mov             rcx, rdi
     call            wglCreateContext
 
     cmp             rax, 0
     je             .fatal_create_context
 
     ; Save hRC
-    mov             rcx, rbx
     mov             rbx, rax
 
     ; Activate rendering
+    mov             rcx, rdi
     mov             rdx, rax
     call            wglMakeCurrent
 

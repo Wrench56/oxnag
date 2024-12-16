@@ -59,13 +59,13 @@ section .bss
 ; ===== [  .TEXT   ] =====
 section .text
 
-; IN : RCX HINSTANCE hInstance
+; IN : RDI HINSTANCE hInstance
 extern wregister_win_class
 wregister_win_class:
     enter 32, 0
 
     ; Load hInstance
-    mov             [rel windowClassStruct + tagWNDCLASSEXA.hInstance], rcx
+    mov             [rel windowClassStruct + tagWNDCLASSEXA.hInstance], rdi
 
     ; Load icons
     mov             rcx, NULL
@@ -107,18 +107,16 @@ wregister_win_class:
 
 
 
-; IN : RCX HINSTANCE hInstance
-; IN : RDX PTR windowTitle
+; IN : RDI HINSTANCE hInstance
+; IN : RSI PTR windowTitle
 ; OUT: RAX HANDLE hWnd
 extern wcreate_win
 wcreate_win:
     enter           32 + 8 * 8, 0
 
-    mov             qword arg(7), rcx                   ; HINSTANCE hInstance
-    mov             r8, rdx                             ; LPCSTR    lpWindowName
-
     mov             rcx, dwExStyle                      ; DWORD     dwExStyle
     lea             rdx, [rel wndClassName]             ; LPCSTR    lpClassName
+    mov             r8, rsi                             ; LPCSTR    lpWindowName
     mov             r9, dwStyle                         ; DWORD     dwStyle
     mov             qword arg(1), 0                     ; int       X
     mov             qword arg(2), 0                     ; int       Y
@@ -126,6 +124,7 @@ wcreate_win:
     mov             qword arg(4), 480                   ; int       nHeight
     mov             qword arg(5), NULL                  ; HWND      hWndParent
     mov             qword arg(6), NULL                  ; HMENU     hMenu
+    mov             qword arg(7), rdi                   ; HINSTANCE hInstance
     mov             qword arg(8), NULL                  ; LPVOID    lpParam
 
     call            CreateWindowExA
@@ -140,19 +139,19 @@ wcreate_win:
     ret    
 
 
-; IN : RCX HANDLE hwnd
+; IN : RDI HANDLE hwnd
 extern wshow_win
 wshow_win:
     enter           32, 0
-    mov             rbx, rcx
 
+    mov             rcx, rdi
     mov             rdx, SW_SHOW
     call            ShowWindow
 
-    mov             rcx, rbx
+    mov             rcx, rdi
     call            SetFocus
 
-    mov             rcx, rbx
+    mov             rcx, rdi
     call            SetForegroundWindow
 
     leave

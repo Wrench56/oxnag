@@ -8,8 +8,8 @@
 
     %macro log 2
         %ifdef LOG_TO_CONSOLE
-            mov             rcx, %1
-            mov             rdx, %2
+            mov             rdi, %1
+            mov             rsi, %2
             call            wprint
         %endif
     %endmacro

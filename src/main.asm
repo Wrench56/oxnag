@@ -52,12 +52,12 @@ _start:
     mov         [rel hInstance], rax
 
     ; Register custom window class
-    mov         rcx, rax
+    mov         rdi, rax
     call        wregister_win_class
 
     ; Create window (returns hWnd)
-    mov         rcx, [rel hInstance]
-    lea         rdx, [rel wndTitle]
+    mov         rdi, [rel hInstance]
+    lea         rsi, [rel wndTitle]
     call        wcreate_win
     mov         [rel hWnd], rax
 
@@ -66,17 +66,16 @@ _start:
     mov         [rel hDC], rax
 
     ; Choose pixel settings
-    mov         rcx, rax
+    mov         rdi, rax
     call        wgl_spfd
 
     ; Init Rendering Context
-    mov         rcx, [rel hDC]
+    mov         rdi, [rel hDC]
     call        wgl_init_context
-
     mov         [rel hRC], rax
 
     ; Show window
-    mov         rcx, [rel hWnd]
+    mov         rdi, [rel hWnd]
     call        wshow_win
 
     call        glinit
@@ -85,7 +84,7 @@ _start:
     call        gl_context_info
 
     ; Run mainloop
-    mov         rcx, [rel hDC]
+    mov         rdi, [rel hDC]
     call        mainloop
 
     call         _exit

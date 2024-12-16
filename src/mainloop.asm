@@ -17,7 +17,6 @@ extern glGetError
 %include "includes/common/opengl.inc"   
 
 section .data
-    hDC                 dq 0
     glFatalTitle        db "Error: mainloop.asm", 0
     glErrMessage        db "[ mainloop ]  OpenGL Error", 0
 
@@ -25,12 +24,10 @@ section .data
 
 section .text
 
-; IN : RCX hDC
+; IN : RDI hDC
 extern mainloop
 mainloop:
     enter           32, 0
-
-    mov             [rel hDC], rcx
 
 .mloop:
     ; Call OS specific window handling
@@ -54,7 +51,7 @@ mainloop:
     call            glLoadIdentity
 
     ; Swap buffers
-    mov             rcx, [rel hDC]
+    mov             rcx, rdi
     call            SwapBuffers
 
     jmp             .mloop

@@ -12,12 +12,9 @@ extern glGetString
     call            glGetString
     cmp             rax, 0
     je              .get_string_fail 
-    push            rax
-    mov             rcx, rax
+    mov             rdi, rax
     call            strlen
-    mov             rbx, rax
-    pop             rax
-    log             rax, rbx
+    log             rdi, rax
 %endmacro
 
 section .data

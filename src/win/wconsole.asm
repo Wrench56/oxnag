@@ -35,16 +35,15 @@ wload_stdout:
     wfatal_error    getStdFatalTitle, getStdErrMessage
 
 ; IN:
-;   RCX: message pointer
-;   RDX: message length
+;   RDI: message pointer
+;   RSI: message length
 extern wprint
 wprint:
     enter           32 + 8 * 1, 0
 
-    mov             r8, rdx
-    mov             rdx, rcx
-
     mov             rcx, [rel stdout]
+    mov             rdx, rdi
+    mov             r8, rsi
     mov             r9, NULL
     mov             qword arg(1), NULL
     call            WriteConsoleA
