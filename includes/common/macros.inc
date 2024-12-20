@@ -1,4 +1,5 @@
 %include "src/flags.inc"
+%include "includes/common/preprocessors.inc"
 
 ; Arguments:
 ;  > 1: string - message
@@ -28,5 +29,99 @@
 %macro epilogue 0
     %ifidn __OUTPUT_FORMAT__, win64
         leave
+    %endif
+%endmacro
+
+; Arguments:
+;  > 1: number - argument number
+;  > 2: any    - argument value
+%macro argxmov 2
+    %ifidn __OUTPUT_FORMAT__, win64
+        ; Windows x64 ABI
+        %if %1 = 1
+            mov     rcx, %2
+        %elif %1 = 2
+            mov     rdx, %2
+        %elif %1 = 3
+            mov     r8, %2
+        %elif %1 = 4
+            mov     r9, %2
+        %elif %1 > 4
+            mov     rsp + ((%1 - 1) * 8), %2
+        %else
+            %error Invalid "argxmov" argument number: %1
+        %endif
+    %elif %ifidn __OUTPUT_FORMAT__, elf64
+        ; System V AMD64 ABI
+        %if %1 = 1
+            mov     rdi, %2
+        %elif %1 = 2
+            mov     rsi, %2
+        %elif %1 = 3
+            mov     rdx, %2
+        %elif %1 = 4
+            mov     rcx, %2
+        %elif %1 = 5
+            mov     r8, %2
+        %elif %1 = 6
+            mov     r9, %2
+        %elif %1 > 6
+            mov     [rsp + 8 * (%1 - 6)], %2
+        %else
+            %error Invalid "argxmov" argument number: %1
+        %endif
+    %else
+        %error Unsupported output format
+    %endif
+%endmacro
+
+; Arguments:
+;  > 1: number - argument number
+;  > 2: any    - memory address or value to load
+%macro argxlea 2
+    %ifidn __OUTPUT_FORMAT__, win64
+        ; Windows x64 ABI
+        %if %1 = 1
+            lea     rcx, %2
+        %elif %1 = 2
+            lea     rdx, %2
+        %elif %1 = 3
+            lea     r8, %2
+        %elif %1 = 4
+            lea     r9, %2
+        %elif %1 > 4
+            ; TODO: This is relatively slow
+            ;       I don't want to erase some register values though
+            %warning Slow "argxlea" detected for argument %1 (assembling for Windows x64 ABI)
+            xchg    [rsp + 8 * (%1 - 1)], rax
+            lea     rax, %2
+            xchg    [rsp + 8 * (%1 - 1)], rax
+        %else
+            %error Invalid "argxlea" argument number: %1
+        %endif
+    %elif %ifidn __OUTPUT_FORMAT__, elf64
+        ; System V AMD64 ABI
+        %if %1 = 1
+            lea     rdi, %2
+        %elif %1 = 2
+            lea     rsi, %2
+        %elif %1 = 3
+            lea     rdx, %2
+        %elif %1 = 4
+            lea     rcx, %2
+        %elif %1 = 5
+            lea     r8, %2
+        %elif %1 = 6
+            lea     r9, %2
+        %elif %1 > 6
+            %warning Slow "argxlea" detected for argument %1 (assembling for System V AMD64 ABI)
+            xchg    [rsp + 8 * (%1 - 6)], rax
+            lea     rax, %2
+            xchg    [rsp + 8 * (%1 - 6)], rax
+        %else
+            %error Invalid "argxlea" argument number: %1
+        %endif
+    %else
+        %error Unsupported output format
     %endif
 %endmacro
