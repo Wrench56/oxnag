@@ -45,14 +45,14 @@ mainloop:
     jne             .gl_error
 
     ; Draw OpenGL screen
-    mov             rcx, GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT
+    argxmov         1, GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT
     call            glClear
 
     ; Reset the current Modelview matrix
     call            glLoadIdentity
 
     ; Swap buffers
-    mov             rcx, rdi
+    argxmov         1, rdi
     call            SwapBuffers
 
     jmp             .mloop
