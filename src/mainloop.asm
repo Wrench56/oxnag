@@ -1,5 +1,3 @@
-extern SwapBuffers
-
 extern glClear
 extern glLoadIdentity
 
@@ -7,9 +5,11 @@ extern glGetError
 
 %ifidn __OUTPUT_FORMAT__, win64
     extern whandle_win_events
+    extern wglswap_buffer
 
     ; handle_window_event is cross platform
     %define handle_window_event     call whandle_win_events
+    %define swap_buffers            call wglswap_buffer
 %endif
 
 %include "includes/common/macros.inc"
@@ -25,14 +25,12 @@ section .data
 
 section .text
 
-; IN : RDI hDC
 extern mainloop
 mainloop:
     prologue        32, 0
 
 .mloop:
     ; Call OS specific window handling
-
     handle_window_event
 
     ; Break if handle_window_event returned 1
@@ -51,9 +49,8 @@ mainloop:
     ; Reset the current Modelview matrix
     call            glLoadIdentity
 
-    ; Swap buffers
-    argxmov         1, rdi
-    call            SwapBuffers
+    ; Swap buffers (OS specific)
+    swap_buffers
 
     jmp             .mloop
 
