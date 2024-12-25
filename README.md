@@ -13,3 +13,9 @@ I really enjoy 64-bit x86 NASM assembly, but I've never worked on anything graph
 ## Building
 
 Using `make` should be enough to build AND run the project.
+
+## Development conventions
+
+### Internal function calling convention
+
+For private (internal) functions, we adhere to the `System V AMD64 ABI` calling convention.
