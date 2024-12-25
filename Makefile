@@ -18,7 +18,20 @@ ASM_FLAGS := -f win64 -g
 LINKER := link
 LINKER_FLAGS := /ENTRY:_start /SUBSYSTEM:WINDOWS /MACHINE:X64 /DEBUG
 
-.PHONY: all clean clean-artifacts run size
+define HELP_STRING
+usage: make <target>
+targets:
+ * check_duplicates      Check for duplicate filenames
+ * compile               Assemble source
+ * link                  Link to specified .lib-s
+ * run                   Run the application
+ * size                  Fetch the size of the application
+ * clean                 Clean the build directory
+ * help                  Show this menu
+endef
+
+
+.PHONY: all clean clean-artifacts run size help
 all: check_duplicates compile link clean-artifacts run size
 
 check_duplicates:
@@ -50,3 +63,6 @@ size:
 
 clean:
 	@rm -f $(BUILD_DIR)/*.exe
+
+help:
+	@: $(info $(HELP_STRING))
