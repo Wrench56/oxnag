@@ -3,7 +3,13 @@ extern glLoadIdentity
 
 extern glGetError
 
-%ifidn __OUTPUT_FORMAT__, win64
+%include "src/flags.inc"
+%include "includes/common/macros.inc"
+
+%include "includes/win/macros.inc"
+%include "includes/common/opengl.inc"   
+
+%ifidn TARGET_OS, OS_WINDOWS
     extern whandle_win_events
     extern wglswap_buffer
 
@@ -11,11 +17,6 @@ extern glGetError
     %define handle_window_event     call whandle_win_events
     %define swap_buffers            call wglswap_buffer
 %endif
-
-%include "includes/common/macros.inc"
-
-%include "includes/win/macros.inc"
-%include "includes/common/opengl.inc"   
 
 section .data
     glFatalTitle        db "Error: mainloop.asm", 0

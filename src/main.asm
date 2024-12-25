@@ -22,10 +22,11 @@ extern gl_context_info
 
 ; ===== [ INCLUDES ] =====
 
+%include "src/flags.inc"
 %include "includes/common/macros.inc"
 %include "includes/common/preprocessors.inc"
 
-%ifidn __OUTPUT_FORMAT__, win64
+%ifidn TARGET_OS, OS_WINDOWS
     %include "includes/win/winuser.inc"
     %include "includes/win/wingdi.inc"
 %endif

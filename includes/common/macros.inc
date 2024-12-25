@@ -4,7 +4,7 @@
 ; Arguments:
 ;  > 1: string - message
 ;  > 2: number - length of message
-%ifidn __OUTPUT_FORMAT__, win64
+%ifidn TARGET_OS, OS_WINDOWS
     extern wprint
 
     %macro log 2
@@ -20,14 +20,14 @@
 ;  > 1: number - stack frame size
 ;  > 2: number - nesting level
 %macro prologue 2
-    %ifidn __OUTPUT_FORMAT__, win64
+    %ifidn TARGET_OS, OS_WINDOWS
         enter       %1, %2
     %endif
 %endmacro
 
 ; No arguments
 %macro epilogue 0
-    %ifidn __OUTPUT_FORMAT__, win64
+    %ifidn TARGET_OS, OS_WINDOWS
         leave
     %endif
 %endmacro
@@ -36,7 +36,7 @@
 ;  > 1: number - argument number
 ;  > 2: any    - argument value
 %macro argxmov 2
-    %ifidn __OUTPUT_FORMAT__, win64
+    %ifidn TARGET_OS, OS_WINDOWS
         ; Windows x64 ABI
         %if %1 = 1
             mov     rcx, %2
@@ -51,7 +51,7 @@
         %else
             %error Invalid "argxmov" argument number: %1
         %endif
-    %elif %ifidn __OUTPUT_FORMAT__, elf64
+    %elif TARGET_OS, elf64
         ; System V AMD64 ABI
         %if %1 = 1
             mov     rdi, %2
@@ -79,7 +79,7 @@
 ;  > 1: number - argument number
 ;  > 2: any    - memory address or value to load
 %macro argxlea 2
-    %ifidn __OUTPUT_FORMAT__, win64
+    %ifidn TARGET_OS, OS_WINDOWS
         ; Windows x64 ABI
         %if %1 = 1
             lea     rcx, %2
@@ -99,7 +99,7 @@
         %else
             %error Invalid "argxlea" argument number: %1
         %endif
-    %elif %ifidn __OUTPUT_FORMAT__, elf64
+    %elif TARGET_OS, elf64
         ; System V AMD64 ABI
         %if %1 = 1
             lea     rdi, %2

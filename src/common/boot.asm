@@ -1,3 +1,5 @@
+%include "src/flags.inc"
+
 %include "includes/common/preprocessors.inc"
 %include "includes/common/macros.inc"
 %include "includes/win/macros.inc"
@@ -42,7 +44,7 @@ section .data
     glGetStrFatalMsg    db "[ boot_process ]: glGetString returned error"
 
 
-%ifidn __OUTPUT_FORMAT__, win64
+%ifidn TARGET_OS, OS_WINDOWS
     extern wboot
     extern wboot_gui
 
