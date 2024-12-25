@@ -24,6 +24,9 @@ section .data
                            "[      ]  > Mark Devenyi <markdevenyidev@gmail.com>", 10, \
                            "[      ] ==========================================", 10
     header_msg_len      equ $ - header_msg
+    window_msg          db "[      ] GUI created (OS specific)", 10, \
+                           "[      ] ==========================================", 10
+    window_msg_len      equ $ - window_msg
     gl_vendor           db "[opengl] OpenGL info:", 10, "[opengl]  > Vendor         "
     gl_vendor_len       equ $ - gl_vendor
     gl_renderer         db 10, "[opengl]  > Renderer       "
@@ -41,7 +44,10 @@ section .data
 
 %ifidn __OUTPUT_FORMAT__, win64
     extern wboot
-    %define os_spec_boot    call wboot
+    extern wboot_gui
+
+    %define os_spec_boot        call wboot
+    %define os_spec_boot_gui    call wboot_gui
 %endif
 
 
@@ -55,6 +61,17 @@ boot_process:
 
     ; Bootup message
     log             header_msg, header_msg_len
+
+    epilogue
+    ret
+
+extern boot_gui
+boot_gui:
+    prologue        32, 0
+
+    os_spec_boot_gui
+
+    log             window_msg, window_msg_len
 
     epilogue
     ret
