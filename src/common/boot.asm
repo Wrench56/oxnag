@@ -37,7 +37,7 @@ section .data
     gl_version_len      equ $ - gl_version
     gl_shading          db 10, "[opengl]  > Shading Lang   "
     gl_shading_len      equ $ - gl_shading
-    separator           db "[      ] =========================================="
+    separator           db "[      ] ==========================================", 10
     separator_len       equ $-separator
     new_line            db 10
     glGetStrFatalTitle  db "Error: boot.asm", 0
