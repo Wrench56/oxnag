@@ -20,14 +20,12 @@ extern glGetString
 %endmacro
 
 section .data
-    header_msg          db "[      ] Hello from oxnag!", 10, \
-                           "[      ] ==========================================", 10, \
-                           "[      ] Made by:", 10, \
-                           "[      ]  > Mark Devenyi <markdevenyidev@gmail.com>", 10, \
-                           "[      ] ==========================================", 10
+    header_msg          db "[      ] Hello from oxnag!", 10
     header_msg_len      equ $ - header_msg
-    window_msg          db "[      ] GUI created (OS specific)", 10, \
-                           "[      ] ==========================================", 10
+    authors_msg         db "[      ] Made by:", 10, \
+                           "[      ]  > Mark Devenyi <markdevenyidev@gmail.com>", 10
+    authors_msg_len     equ $ - authors_msg
+    window_msg          db "[      ] GUI created (OS specific)", 10
     window_msg_len      equ $ - window_msg
     gl_vendor           db "[opengl] OpenGL info:", 10, "[opengl]  > Vendor         "
     gl_vendor_len       equ $ - gl_vendor
@@ -63,6 +61,9 @@ boot_process:
 
     ; Bootup message
     log             header_msg, header_msg_len
+    log             separator, separator_len
+    log             authors_msg, authors_msg_len
+    log             separator, separator_len
 
     epilogue
     ret
@@ -74,6 +75,7 @@ boot_gui:
     os_spec_boot_gui
 
     log             window_msg, window_msg_len
+    log             separator, separator_len
 
     epilogue
     ret
