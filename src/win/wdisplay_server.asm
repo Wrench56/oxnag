@@ -2,6 +2,7 @@
 extern LoadIconA
 extern LoadCursorA
 extern RegisterClassExA
+extern UnregisterClassA
 
 extern CreateWindowExA
 
@@ -34,6 +35,7 @@ section .data
     mbFatalTitle        db "Error: create_window.asm", 0
     mbRegErrMessage     db "[ wregister_win_class ]  Registering the custom class failed!", 0
     mbIniErrMessage     db "[ wcreate_win ]  Creating a window failed!", 0
+    mbUnrErrMessage     db "[ wunregister_win_class ]  Unregistering the custom class failed!", 0
 
     wndClassName        db "WindowClass", 0
 
@@ -107,6 +109,21 @@ wregister_win_class:
     leave
     ret
 
+
+extern wunregister_win_class
+wunregister_win_class:
+    enter           32, 0
+
+    lea             rcx, [rel wndClassName]
+    mov             rdx, [rel hInstance]
+    call            UnregisterClassA
+    cmp             rax, 0
+    je              .fatal
+
+    leave
+    ret
+.fatal:
+    wfatal_error    mbFatalTitle, mbUnrErrMessage
 
 
 ; IN : RDI PTR windowTitle
