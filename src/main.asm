@@ -20,6 +20,8 @@ extern boot_process
 extern boot_gui
 extern gl_context_info
 
+extern cleanup
+
 ; ===== [ INCLUDES ] =====
 
 %include "src/flags.inc"
@@ -55,5 +57,4 @@ _start:
     call            mainloop
 
 _exit:
-    xor             rcx, rcx
-    call            ExitProcess
+    call            cleanup
