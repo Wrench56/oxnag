@@ -2,7 +2,6 @@
 
 %include "includes/common/preprocessors.inc"
 %include "includes/common/macros.inc"
-%include "includes/win/macros.inc"
 %include "includes/common/opengl.inc"
 
 extern strlen
@@ -99,4 +98,4 @@ gl_context_info:
     epilogue
     ret
 .get_string_fail:
-    wfatal_error    glGetStrFatalTitle, glGetStrFatalMsg
+    fatal_error    glGetStrFatalTitle, glGetStrFatalMsg

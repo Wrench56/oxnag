@@ -125,3 +125,13 @@
         %error Unsupported output format
     %endif
 %endmacro
+
+; Arguments:
+;  > 1: string - title
+;  > 2: string - message
+%macro fatal_error 2
+    %ifidn TARGET_OS, OS_WINDOWS
+        %include "includes/win/macros.inc"
+        wfatal_error %1, %2
+    %endif
+%endmacro

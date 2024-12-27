@@ -5,8 +5,6 @@ extern glGetError
 
 %include "src/flags.inc"
 %include "includes/common/macros.inc"
-
-%include "includes/win/macros.inc"
 %include "includes/common/opengl.inc"   
 
 %ifidn TARGET_OS, OS_WINDOWS
@@ -57,7 +55,7 @@ mainloop:
 
 
 .gl_error:
-    wfatal_error     glFatalTitle, glErrMessage
+    fatal_error     glFatalTitle, glErrMessage
 
 .exit:
     epilogue
