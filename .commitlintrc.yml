@@ -30,6 +30,7 @@ rules:
       - init
       - tools
       - utils
+      - flags
   subject-empty:
     level: error
   type:
