@@ -2,6 +2,7 @@
 extern WriteConsoleA
 extern GetStdHandle
 extern AllocConsole
+extern FreeConsole
 
 ; ===== [ INCLUDES ] =====
 %include "includes/common/preprocessors.inc"
@@ -10,8 +11,9 @@ extern AllocConsole
 ; ===== [  .DATA   ] =====
 section .data
     stdout                dq 0
-    getStdFatalTitle      db "Error: wconsole.asm", 0
+    fatalTitle      db "Error: wconsole.asm", 0
     getStdErrMessage      db "[ wload_stdout ]  Failed to get console handle", 0
+    freeConsoleErrMessage db "[ wconsole_cleanup ]  Failed to detach from console", 0
 
 ; ===== [  .TEXT   ] =====
 section .text
@@ -32,7 +34,22 @@ wload_stdout:
     ret
 
 .failure_console_info:
-    wfatal_error    getStdFatalTitle, getStdErrMessage
+    wfatal_error    fatalTitle, getStdErrMessage
+
+
+extern wconsole_cleanup
+wconsole_cleanup:
+    enter           32, 0
+
+    call            FreeConsole
+    cmp             rax, 0
+    je              .failure_free_console
+
+    leave
+    ret
+.failure_free_console:
+    wfatal_error    fatalTitle, freeConsoleErrMessage
+
 
 ; IN:
 ;   RDI: message pointer
