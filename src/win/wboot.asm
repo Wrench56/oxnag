@@ -15,6 +15,7 @@ extern wload_stdout
 extern hWnd
 extern hRC
 extern hDC
+extern hInstance
 
 %include "src/flags.inc"
 
@@ -22,7 +23,6 @@ extern hDC
 ; ===== [  .DATA   ] =====
 section .data
     wndTitle        db "OxNAG", 0
-    hInstance       dq 0
 
 
 section .text
@@ -51,8 +51,7 @@ wboot_gui:
     call            wregister_win_class
 
     ; Create window (returns hWnd)
-    mov             rdi, [rel hInstance]
-    lea             rsi, [rel wndTitle]
+    lea             rdi, [rel wndTitle]
     call            wcreate_win
     mov             [rel hWnd], rax
 
