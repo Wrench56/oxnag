@@ -51,7 +51,7 @@
         %else
             %error Invalid "argxmov" argument number: %1
         %endif
-    %elif TARGET_OS, elf64
+    %elif TARGET_OS, OS_LINUX
         ; System V AMD64 ABI
         %if %1 = 1
             mov     rdi, %2
@@ -99,7 +99,7 @@
         %else
             %error Invalid "argxlea" argument number: %1
         %endif
-    %elif TARGET_OS, elf64
+    %elif TARGET_OS, OS_LINUX
         ; System V AMD64 ABI
         %if %1 = 1
             lea     rdi, %2
