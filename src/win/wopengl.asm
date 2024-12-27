@@ -89,6 +89,7 @@ wgl_spfd:
 
 
 ; IN : RDI hDC
+; OUT: RAX hRC
 extern wgl_init_context
 wgl_init_context:
     enter           32, 0
@@ -109,6 +110,9 @@ wgl_init_context:
 
     cmp             rax, 0
     je              .fatal_make_current
+
+    ; Return hRC
+    mov             rax, rbx
 
     leave
     ret
