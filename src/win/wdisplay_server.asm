@@ -223,20 +223,11 @@ wndproc_callback:
     cmp             rdx, WM_CLOSE
     jz              .wm_close
 
-    cmp             rdx, WM_DESTROY
-    jz              .wm_destroy
-
-
     call            DefWindowProcA
     jmp             .exit
 
 
 .wm_close:
-    call            DestroyWindow
-    xor             rax, rax
-    jmp             .exit
-
-.wm_destroy:
     xor             rcx, rcx                            ; int nExitCode
     call            PostQuitMessage
     xor             rax, rax
