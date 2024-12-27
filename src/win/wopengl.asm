@@ -6,6 +6,8 @@ extern ChoosePixelFormat
 extern SetPixelFormat
 extern SwapBuffers
 
+extern hDC
+
 ; ===== [ INCLUDES ] =====
 %include "includes/win/winuser.inc"
 %include "includes/win/wingdi.inc"
@@ -17,8 +19,6 @@ extern SwapBuffers
 COLOR_BITS    EQU 32
 
 section .data
-    hDC                 dq 0
-
     mbFatalTitle        db "Error: attach_opengl.asm", 0
     mbPFCErrMessage     db "[ wgl_spfd ]  Can't find a suitable PixelFormat", 0
     mbPFSErrMessage     db "[ wgl_spfd ]  Can't set the PixelFormat", 0
@@ -123,17 +123,6 @@ wgl_init_context:
 .fatal_make_current:
     wglfatal_error   mbFatalTitle, mbMCErrMessage
 
-
-; IN : RDI hDC
-; TODO: Decide whether to include this in `wgl_spfd`
-extern wsave_hDC
-wsave_hDC:
-    enter           32, 0
-
-    mov             [rel hDC], rdi
-
-    leave
-    ret
 
 extern wglswap_buffer
 wglswap_buffer:

@@ -12,6 +12,10 @@ extern GetDC
 
 extern wload_stdout
 
+extern hWnd
+extern hRC
+extern hDC
+
 %include "src/flags.inc"
 
 
@@ -19,9 +23,6 @@ extern wload_stdout
 section .data
     wndTitle        db "OxNAG", 0
     hInstance       dq 0
-    hWnd            dq 0
-    hDC             dq 0
-    hRC             dq 0
 
 
 section .text
@@ -71,9 +72,6 @@ wboot_gui:
     ; Show window
     mov             rdi, [rel hWnd]
     call            wshow_win
-
-    mov             rdi, [rel hDC]
-    call            wsave_hDC
 
     leave
     ret
