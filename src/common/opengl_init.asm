@@ -29,7 +29,7 @@ extern glinit
 glinit:
     prologue        32, 0
 
-    mov             rcx, GL_SMOOTH
+    argxmov         1, GL_SMOOTH
     call            glShadeModel
 
     movss           xmm0, [rel BG_RED]
@@ -41,14 +41,14 @@ glinit:
     movss           xmm0, [rel BG_CLEAR_DEPTH]
     call            glClearDepth
 
-    mov             rcx, GL_DEPTH_TEST
+    argxmov         1, GL_DEPTH_TEST
     call            glEnable
 
-    mov             rcx, GL_LEQUAL
+    argxmov         1, GL_LEQUAL
     call            glDepthFunc
 
-    mov             rcx, GL_PERSPECTIVE_CORRECTION_HINT
-    mov             rdx, GL_NICEST
+    argxmov         1, GL_PERSPECTIVE_CORRECTION_HINT
+    argxmov         2, GL_NICEST
     call            glHint
 
     epilogue
