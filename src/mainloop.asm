@@ -14,6 +14,9 @@ extern glGetError
     ; handle_window_event is cross platform
     %define handle_window_event     call whandle_win_events
     %define swap_buffers            call wglswap_buffer
+%else
+    %define handle_window_event
+    %define swap_buffers
 %endif
 
 section .data
