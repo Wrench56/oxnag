@@ -8,15 +8,15 @@ COMMON_DIR := $(SRC_DIR)/common
 ifeq ($(OS),Windows_NT)
     PLATFORM := win
 else
-    PLATFORM := unix
+    PLATFORM := nix
 endif
 
 # Override PLATFORM Based on Explicit Target
 ifneq ($(filter win,$(MAKECMDGOALS)),)
     PLATFORM := win
 endif
-ifneq ($(filter unix,$(MAKECMDGOALS)),)
-    PLATFORM := unix
+ifneq ($(filter nix,$(MAKECMDGOALS)),)
+    PLATFORM := nix
 endif
 
 # Platform-Specific Settings
@@ -30,25 +30,28 @@ ifeq ($(PLATFORM),win)
     LIB_DIR := ./libs/win
     LIBS := $(wildcard $(LIB_DIR)/*.lib)
 else
-    PLATFORM_DIR := $(SRC_DIR)/unix
+    PLATFORM_DIR := $(SRC_DIR)/nix
     EXE := $(BUILD_DIR)/oxnag
     ASM := nasm
     ASM_FLAGS := -f elf64 -g
     LINKER := ld
     LINKER_FLAGS := -o $(EXE) -e _start -lc -lGL
-    LIB_DIR := ./libs/unix
+    LIB_DIR := ./libs/nix
     LIBS := $(wildcard $(LIB_DIR)/*.a)
 endif
 
 # Source and Object Files
 COMMON_SRCS := $(wildcard $(SRC_DIR)/*.asm) $(wildcard $(COMMON_DIR)/*.asm)
 PLATFORM_SRCS := $(wildcard $(PLATFORM_DIR)/*.asm)
+ifeq ($(PLATFORM),nix)
+    PLATFORM_SRCS += $(wildcard $(PLATFORM_DIR)/posix/*.asm)
+endif
 UTIL_SRCS := $(wildcard $(SRC_DIR)/utils/*.asm)
 ALL_SRCS := $(COMMON_SRCS) $(PLATFORM_SRCS) $(UTIL_SRCS)
 ALL_OBJS := $(patsubst %.asm, $(BUILD_DIR)/%.o, $(notdir $(ALL_SRCS)))
 
 # Targets
-.PHONY: all clean run size help win unix compile link banner
+.PHONY: all clean run size help win nix compile link banner
 
 # Default Target
 all: banner $(PLATFORM)
@@ -117,7 +120,7 @@ usage: make <target>
 targets:
  * banner               Show project banner
  * win                  Build for Windows
- * unix                 Build for Unix
+ * nix                 Build for *nix
  * compile              Compile all sources (current platform)
  * link                 Link all object files (current platform)
  * run                  Run the application
@@ -129,5 +132,5 @@ endef
 # Windows Build
 win: banner check_duplicates compile link run size
 
-# Unix Build
-unix: banner check_duplicates compile link run size
+# *nix Build
+nix: banner check_duplicates compile link run size
