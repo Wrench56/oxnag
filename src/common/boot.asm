@@ -47,6 +47,9 @@ section .data
 
     %define os_spec_boot        call wboot
     %define os_spec_boot_gui    call wboot_gui
+%else
+    %define os_spec_boot
+    %define os_spec_boot_gui
 %endif
 
 
