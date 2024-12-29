@@ -150,7 +150,7 @@
         %ifidn TARGET_OS, OS_WINDOWS
             wfatal_error %1, %2
         %else
-            %warning The macro `log` for the current platform is not implemented
+            %warning The macro `fatal_error` for the current platform is not implemented
         %endif
     %endmacro
 %endif
