@@ -18,6 +18,14 @@
                 mov             rsi, %2
                 call            wprint
             %endif
+        %elifidn TARGET_OS, OS_LINUX
+            extern pprint
+
+            %ifdef LOG_TO_CONSOLE
+                mov             rdi, %1
+                mov             rsi, %2
+                call            pprint
+            %endif
         %else
             %warning The macro `log` for the current platform is not implemented
         %endif
