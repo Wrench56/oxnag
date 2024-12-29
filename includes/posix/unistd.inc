@@ -1,0 +1,1 @@
+%define STDOUT                          1
