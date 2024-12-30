@@ -1,8 +1,7 @@
 #!/bin/sh
 
-URL="https://javagl.github.io/GLConstantsTranslator/GLConstantsTranslator.html"
-
 open_on_unix() {
+    URL="$1"
     if command -v xdg-open >/dev/null 2>&1; then
         xdg-open "$URL" >/dev/null 2>&1
     elif command -v gnome-open >/dev/null 2>&1; then
@@ -22,22 +21,31 @@ open_on_unix() {
     fi
 }
 
-case "$(uname)" in
-    Linux*)
-        open_on_unix
-        ;;
-    Darwin*)
-        if ! open "$URL" >/dev/null 2>&1; then
-            echo "Unable to open URL. Please copy and paste it into your browser: $URL"
-        fi
-        ;;
-    FreeBSD*|OpenBSD*|NetBSD*)
-        open_on_unix
-        ;;
-    CYGWIN*|MINGW*|MSYS*)
-        explorer "$URL" >/dev/null 2>&1
-        ;;
-    *)
-        echo "Unsupported OS. Please open this URL manually: $URL"
-        ;;
-esac
+open_url() {
+    URL="$1"
+    if [ -z "$URL" ]; then
+        echo "Usage: open_url <URL>"
+        return 1
+    fi
+
+    case "$(uname)" in
+        Linux*|FreeBSD*|OpenBSD*|NetBSD*)
+            open_on_unix "$URL"
+            ;;
+        Darwin*)
+            if ! open "$URL" >/dev/null 2>&1; then
+                echo "Unable to open URL. Please copy and paste it into your browser: $URL"
+            fi
+            ;;
+        CYGWIN*|MINGW*|MSYS*)
+            explorer "$URL" >/dev/null 2>&1
+            ;;
+        *)
+            echo "Unsupported OS. Please open this URL manually: $URL"
+            ;;
+    esac
+}
+
+open_url "https://www.shellcheck.net/"
+open_url "https://javagl.github.io/GLConstantsTranslator/GLConstantsTranslator.html"
+open_url "https://opengl.gpuinfo.org/"
