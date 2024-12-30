@@ -1,4 +1,4 @@
 #!/bin/sh
 
-chmod +x tools/opengl_consts.sh
-sh tools/opengl_consts.sh
+chmod +x tools/docs_tools.sh
+sh tools/docs_tools.sh
