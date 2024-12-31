@@ -60,7 +60,7 @@ endif
 
 # Display Backend Specific Sources
 ifeq ($(DISPLAY_BACKEND),x11)
-    PLATFORM_SRCS += $(wildcard $(PLATFORM_DIR)/display/x11/*.asm)
+    PLATFORM_SRCS += $(wildcard $(PLATFORM_DIR)/display/X11/*.asm)
 endif
 ifeq ($(DISPLAY_BACKEND),wayland)
     PLATFORM_SRCS += $(wildcard $(PLATFORM_DIR)/display/wayland/*.asm)
