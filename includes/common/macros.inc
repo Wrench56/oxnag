@@ -155,10 +155,20 @@
 ;  > 2: string - message
 %ifnmacro fatal_error
     %macro fatal_error 2
-        %ifidn TARGET_OS, OS_WINDOWS
+        %ifidn DISPLAY_SERVER, DS_WIND
             wfatal_error %1, %2
+        %elifidn DISPLAY_SERVER, DS_XORG
+            %ifidn TARGET_OS, OS_WINDOWS
+                ; Seriously, if you are using X on Windows, you are a legend...
+                %error Currently, the X display server is not supported for Windows
+            %endif
+            extern xpopup
+
+            mov rdi, %1
+            mov rsi, %2
+            call xpopup
         %else
-            %warning The macro `fatal_error` for the current platform is not implemented
+            %warning The macro `fatal_error` for the current display server is not implemented
         %endif
     %endmacro
 %endif
