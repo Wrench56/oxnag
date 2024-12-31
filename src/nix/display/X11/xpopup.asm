@@ -38,7 +38,7 @@ xpopup:
     je              .show_popup
 
     ; Add newline
-    mov             byte [rax-1], 92
+    mov             byte [rax - 1], 92
     mov		        byte [rax], 110
     inc             rax
 
@@ -55,7 +55,7 @@ xpopup:
     je              .close_at_end
 
     ; Add closeing quote
-    mov             byte [rax], 39
+    mov             byte [rax - 1], 39
     jmp             .show_popup
 
 .close_at_end:
