@@ -8,6 +8,10 @@
     extern wcleanup
 
     %define os_spec_cleanup     call wcleanup
+%else
+    %warning No OS_type=TARGET_OS specific cleanup implemented
+
+    %define os_spec_cleanup     
 %endif
 
 
