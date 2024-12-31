@@ -3,7 +3,6 @@ extern memccpy
 extern system
 
 ; ===== [ INCLUDES ] =====
-
 %include "src/flags.inc"
 %include "includes/common/macros.inc"
 %include "includes/common/preprocessors.inc"
@@ -54,7 +53,7 @@ xpopup:
     test            rax, rax
     je              .close_at_end
 
-    ; Add closeing quote
+    ; Add closing quote
     mov             byte [rax - 1], 39
     jmp             .show_popup
 
