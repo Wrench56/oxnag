@@ -19,6 +19,24 @@ ifneq ($(filter nix,$(MAKECMDGOALS)),)
     PLATFORM := nix
 endif
 
+# Default Display Backend
+ifeq ($(PLATFORM),win)
+    DISPLAY_BACKEND := dswind
+else
+    DISPLAY_BACKEND := x11
+endif
+
+# Override Display Backend Based on Explicit Target
+ifneq ($(filter x11,$(MAKECMDGOALS)),)
+    DISPLAY_BACKEND := x11
+endif
+ifneq ($(filter wayland,$(MAKECMDGOALS)),)
+    DISPLAY_BACKEND := wayland
+endif
+ifneq ($(filter dswind,$(MAKECMDGOALS)),)
+    DISPLAY_BACKEND := dswind
+endif
+
 # Platform-Specific Settings
 ifeq ($(PLATFORM),win)
     PLATFORM_DIR := $(SRC_DIR)/win
@@ -40,9 +58,17 @@ else
     LIBS := $(wildcard $(LIB_DIR)/*.a)
 endif
 
+# Display Backend Specific Sources
+ifeq ($(DISPLAY_BACKEND),x11)
+    PLATFORM_SRCS += $(wildcard $(PLATFORM_DIR)/display/x11/*.asm)
+endif
+ifeq ($(DISPLAY_BACKEND),wayland)
+    PLATFORM_SRCS += $(wildcard $(PLATFORM_DIR)/display/wayland/*.asm)
+endif
+
 # Source and Object Files
 COMMON_SRCS := $(wildcard $(SRC_DIR)/*.asm) $(wildcard $(COMMON_DIR)/*.asm)
-PLATFORM_SRCS := $(wildcard $(PLATFORM_DIR)/*.asm)
+PLATFORM_SRCS += $(wildcard $(PLATFORM_DIR)/*.asm)
 ifeq ($(PLATFORM),nix)
     PLATFORM_SRCS += $(wildcard $(PLATFORM_DIR)/posix/*.asm)
 endif
@@ -51,7 +77,7 @@ ALL_SRCS := $(COMMON_SRCS) $(PLATFORM_SRCS) $(UTIL_SRCS)
 ALL_OBJS := $(patsubst %.asm, $(BUILD_DIR)/%.o, $(notdir $(ALL_SRCS)))
 
 # Targets
-.PHONY: all clean run size help win nix compile link banner
+.PHONY: all clean run size help win nix x11 wayland dswind compile link banner
 
 # Default Target
 all: banner $(PLATFORM)
@@ -70,6 +96,7 @@ banner:
 	else \
 		echo "NASM Version: \033[31mMissing\033[0m"; \
 	fi
+	@echo "Display Backend: $(DISPLAY_BACKEND)"
 	@echo ""
 
 # Duplicate Filename Check
@@ -120,7 +147,10 @@ usage: make <target>
 targets:
  * banner               Show project banner
  * win                  Build for Windows
- * nix                 Build for *nix
+ * nix                  Build for *nix
+ * x11                  Build with X11 display backend (default for *nix)
+ * wayland              Build with Wayland display backend
+ * dswind               Build with dswind backend (default for Windows)
  * compile              Compile all sources (current platform)
  * link                 Link all object files (current platform)
  * run                  Run the application
@@ -134,3 +164,12 @@ win: banner check_duplicates compile link run size
 
 # *nix Build
 nix: banner check_duplicates compile link run size
+
+# X11 Display Backend Build
+x11: banner check_duplicates compile link run size
+
+# Wayland Display Backend Build
+wayland: banner check_duplicates compile link run size
+
+# dswind Display Backend Build
+dswind: banner check_duplicates compile link run size
