@@ -87,14 +87,14 @@ banner:
 	@echo "===============[ OXNAG ]==============="
 	@echo "Platform: $(PLATFORM)"
 	@if [ -d "$(BUILD_DIR)" ]; then \
-		echo -e "Build Directory: \033[32mExists\033[0m"; \
+		printf "Build Directory: \033[32mExists\033[0m\n"; \
 	else \
-		echo -e "Build Directory: \033[31mMissing\033[0m"; \
+		printf "Build Directory: \033[31mMissing\033[0m\n"; \
 	fi
 	@if command -v $(ASM) > /dev/null 2>&1; then \
 		echo "NASM Version: $$( $(ASM) -v | sed 's/NASM version \([0-9]*\.[0-9]*\.[0-9]*\).*/\1/' | head -n 1 )"; \
 	else \
-		echo "NASM Version: \033[31mMissing\033[0m"; \
+		printf "NASM Version: \033[31mMissing\033[0m\n"; \
 	fi
 	@echo "Display Backend: $(DISPLAY_BACKEND)"
 	@echo ""
@@ -103,14 +103,14 @@ banner:
 check_duplicates:
 	@duplicate_files=$$(find $(SRC_DIR) -type f -name '*.asm' -exec basename {} \; | sort | uniq -d); \
 	if [ -n "$$duplicate_files" ]; then \
-		echo -e "\033[31mError\033[0m: Duplicate source filenames detected:"; \
+		printf "\033[31mError\033[0m: Duplicate source filenames detected:\n"; \
 		echo " > $$duplicate_files"; \
 		exit 1; \
 	fi
 
 # Compile All Sources
 compile:
-	@echo -e "=============[ COMPILING ]============="
+	@echo "=============[ COMPILING ]============="
 	@for SRC in $(ALL_SRCS); do \
 		OBJ=$(BUILD_DIR)/$$(basename $${SRC%.asm}.o); \
 		$(ASM) $(ASM_FLAGS) $$SRC -o $$OBJ; \
@@ -119,13 +119,13 @@ compile:
 
 # Link Object Files
 link:
-	@echo -e "\n==============[ LINKING ]=============="
+	@printf "\n==============[ LINKING ]==============\n"
 	@$(LINKER) $(LINKER_FLAGS) $(ALL_OBJS) $(LIBS)
 
 # Run Executable
 run: $(EXE)
 	@echo ""
-	@echo -e "\n================[ RUN ]================"
+	@printf "\n================[ RUN ]================\n"
 	@echo "Running the executable..."
 	@$(EXE); echo " > Return code: $$?"
 
