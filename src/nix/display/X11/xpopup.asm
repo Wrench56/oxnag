@@ -1,5 +1,5 @@
 ; ===== [ EXTERNS  ] =====
-extern strncpy
+extern memccpy
 extern system
 
 ; ===== [ INCLUDES ] =====
@@ -8,13 +8,13 @@ extern system
 %include "includes/common/macros.inc"
 %include "includes/common/preprocessors.inc"
 
-MAX_LENGTH              EQU 128
+MAX_LENGTH              EQU 255 - 36
 
 ; ===== [  .DATA   ] =====
 section .data
-    command         db "xmessage -center ", 0
-    text            times MAX_LENGTH db 0
-
+    command         db "printf '"
+    text            times MAX_LENGTH + 1 db 32
+    ______________  db " | xmessage -center -file -", 0
 
 ; ===== [  .TEXT   ] =====
 section .text
@@ -30,23 +30,40 @@ xpopup:
     ; Load title
     mov             rsi, rdi
     lea             rdi, [rel text]
-    mov             rdx, MAX_LENGTH
-    call            strncpy
-
-    mov             rdi, rax
-    mov             rsi, rbx
+    mov             rdx, 0
+    mov             rcx, MAX_LENGTH
+    call            memccpy
+    
+    test            rax, rax
+    je              .show_popup
 
     ; Add newline
-    mov             byte [rax + 1], 10
+    mov             byte [rax-1], 92
+    mov		        byte [rax], 110
+    inc             rax
 
     ; Load message
-    mov             rbx, MAX_LENGTH - 1
-    sub             rbx, rax
-    mov             rdx, rbx
-    call            strncpy
+    mov             rdi, rax
+    mov	            rsi, rbx
+    mov		        rdx, 0
 
+    lea             rcx, [rel text + MAX_LENGTH]
+    sub             rcx, rax
+    call            memccpy
+
+    test            rax, rax
+    je              .close_at_end
+
+    ; Add closeing quote
+    mov             byte [rax], 39
+    jmp             .show_popup
+
+.close_at_end:
+    mov             byte [rel text + MAX_LENGTH + 1], 39
+
+.show_popup:
     ; Show popup
-    lea             rdi, [rel text]
+    lea             rdi, [rel command]
     call            system
 
     ret
