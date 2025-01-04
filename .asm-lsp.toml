@@ -1,0 +1,7 @@
+[default_config]
+assembler = "nasm"
+instruction_set = "x86/x86-64"
+
+[opts]
+diagnostics = true
+
