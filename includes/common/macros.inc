@@ -34,20 +34,20 @@
 
 ; Arguments:
 ;  > 1: number - stack frame size
-;  > 2: number - nesting level
 %ifnmacro prologue
-    %macro prologue 2
+    %macro prologue 1
         %ifidn TARGET_OS, OS_WINDOWS
-            enter       %1, %2
+            sub	rsp, %1
         %endif
     %endmacro
 %endif
 
-; No arguments
+; Arguments:
+;  > 2: number - stack frame size
 %ifnmacro epilogue
-    %macro epilogue 0
+    %macro epilogue 1
         %ifidn TARGET_OS, OS_WINDOWS
-            leave
+            add rsp, %1
         %endif
     %endmacro
 %endif

@@ -29,7 +29,7 @@ section .text
 
 extern mainloop
 mainloop:
-    prologue        32, 0
+    prologue        32
 
 .mloop:
     ; Call OS specific window handling
@@ -61,5 +61,5 @@ mainloop:
     fatal_error     glFatalTitle, glErrMessage
 
 .exit:
-    epilogue
+    epilogue	    32
     ret

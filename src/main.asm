@@ -39,7 +39,7 @@ section .text
 global _start
 _start:
     sub             rbp, 8
-    prologue        32, 0
+    prologue        32
 
     ; Initialize misc OS specific things (e.g. debug console)
     call            boot_process

@@ -18,9 +18,9 @@
 section .text
 extern cleanup
 cleanup:
-    prologue        32, 0
+    prologue        32
 
     os_spec_cleanup
 
-    epilogue
+    epilogue	    32
     ret

@@ -27,7 +27,7 @@ section .data
 section .text
 extern glinit
 glinit:
-    prologue        32, 0
+    prologue        32
 
     argxmov         1, GL_SMOOTH
     call            glShadeModel
@@ -51,5 +51,5 @@ glinit:
     argxmov         2, GL_NICEST
     call            glHint
 
-    epilogue
+    epilogue	    32
     ret
