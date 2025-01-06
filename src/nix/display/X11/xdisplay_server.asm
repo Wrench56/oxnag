@@ -2,8 +2,9 @@
 extern XOpenDisplay
 extern glXQueryVersion
 extern glXChooseFBConfig
-extern DefaultScreen
+extern XDefaultScreen
 extern glXGetVisualFromFBConfig
+extern glXGetFBConfigAttrib
 extern XFree
 
 extern xdisplay
@@ -28,8 +29,8 @@ section .data
     glx_major       dd 0
     glx_minor       dd 0
     fbcount         dd 0
-    samples         dd 0
-    best_num_samp   dd -1
+    samples         dq 0
+    best_num_samp   dq -1
     bestFbc	    dq NULL
     samp_buf        dd 0
 
@@ -89,7 +90,7 @@ xpick_best_fb:
 .valid_version:
 
     mov             rdi, rbx                                ; Display* display
-    call            DefaultScreen
+    call            XDefaultScreen
 
     mov             rdi, rbx                                ; Display* dpy
     mov             rsi, rax                                ; int screen
@@ -138,7 +139,7 @@ xpick_best_fb:
     mov             rax, [r13 + r12]
     mov             qword [rel bestFbc], rax
     mov             rax, [rel samples]
-    mov             dword [rel best_num_samp], rax
+    mov             [rel best_num_samp], rax
 
 
 .xfree:
