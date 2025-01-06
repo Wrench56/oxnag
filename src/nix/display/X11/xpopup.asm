@@ -1,6 +1,7 @@
 ; ===== [ EXTERNS  ] =====
 extern memccpy
-extern system
+
+extern psystem
 
 ; ===== [ INCLUDES ] =====
 %include "src/flags.inc"
@@ -38,13 +39,13 @@ xpopup:
 
     ; Add newline
     mov             byte [rax - 1], 92
-    mov		        byte [rax], 110
+    mov		    byte [rax], 110
     inc             rax
 
     ; Load message
     mov             rdi, rax
     mov	            rsi, rbx
-    mov		        rdx, 0
+    mov		    rdx, 0
 
     lea             rcx, [rel text + MAX_LENGTH]
     sub             rcx, rax
@@ -62,7 +63,7 @@ xpopup:
 
 .show_popup:
     ; Show popup
-    lea             rdi, [rel command]
-    call            system
+    mov             rdi, command
+    call            psystem
 
     ret
