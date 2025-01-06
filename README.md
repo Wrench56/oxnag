@@ -19,3 +19,7 @@ Using `make` should be enough to build AND run the project.
 ### Internal function calling convention
 
 For private (internal) functions, we adhere to the `System V AMD64 ABI` calling convention.
+
+## Special thanks
+
+I would like to thank [@pskrgag](https://github.com/pskrgag) and [@xadaemon](https://github.com/xadaemon). Their contributions to the project are beyond of what the git history shows, they have been excellent mentors and helped me debug and understand many `x64` quirks. Without them, this project would hardly be possible.
