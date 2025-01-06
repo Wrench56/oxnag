@@ -1,58 +1,64 @@
 ; ===== [ EXTERNS  ] =====
 extern fork
-extern execve
+extern execlp
 extern exit
 extern waitpid
+extern access
 
 ; ===== [ INCLUDES ] =====
-%include "src/flags.inc"
-%include "src/cdef.inc"
-
+%include "includes/common/cdef.inc"
+%include "includes/posix/unistd.inc"
 
 ; ===== [  .DATA  ] =====
-    args           db "/bin/sh", 0, "-l", NULL
+    shell_path     db "/bin/sh", 0
+    shell_flag     db "-c", 0
     status         dd 0
 
 ; ===== [  .TEXT  ] =====
 section .text
 
-; IN: pointer to command (null-terminated)
+; IN: RDI - pointer to command (null-terminated)
 ; OUT: status (check `system()` POSIX man page)
 global psystem
 psystem:
     test            rdi, rdi
     jz              .access
 
+    mov             rbx, rdi
+
     call            fork                                   ; ==> pid_t
-    test            rax, rax
-    jnz             .parent
 
     cmp             rax, -1
     je              .fork_fail
 
-    mov             rdi, args                               ; const char* pathname
-    mov             rsi, args                               ; char* const argv[]
-    xor             rdx, rdx                                ; char* const envp[]
-    call            execve                                  ; ==> int
+    test            rax, rax
+    jnz             .parent
+
+    mov             rdi, shell_path                         ; const char* pathname
+    mov             rsi, shell_path                         ; const char* arg0
+    mov             rdx, shell_flag                         ; const char* arg1
+    mov             rcx, rbx                                ; const char* arg2
+    xor             r8, r8                                  ; NULL
+    call            execlp                                  ; ==> int
 
     mov             rdi, 127                                ; int status
     call            exit                                    ; ==> void
 
-.parent
+.parent:
     mov             rdi, rax                                 ; pid_t pid
     mov             rsi, status                              ; int* status
     xor             rdx, rdx                                 ; int options
     call            waitpid
 
-    mov             rax, [rel status]
+    xor             rax, rax
+    mov             eax, [rel status]
     ret
 
 .access:
-    mov             rdi, args                                 ; const char* pathname
+    mov             rdi, shell_path                           ; const char* pathname
     mov             rsi, X_OK                                 ; int mode
     call            access                                    ; ==> int
 
-    add             rsp, 16
     ret
 
 .fork_fail:
