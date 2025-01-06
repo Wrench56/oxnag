@@ -53,9 +53,9 @@ else
     ASM := nasm
     ASM_FLAGS := -f elf64 -g
     LINKER := ld
-    LINKER_FLAGS := -o $(EXE) -e _start -lc -lGL
+    LINKER_FLAGS := --dynamic-linker /lib64/ld-linux-x86-64.so.2 -o $(EXE) -e _start --copy-dt-needed-entries -lc -lGL
     LIB_DIR := ./libs/nix
-    LIBS := $(wildcard $(LIB_DIR)/*.a)
+    LIBS := $(wildcard $(LIB_DIR)/*.a) -lc -lGL
 endif
 
 # Display Backend Specific Sources
