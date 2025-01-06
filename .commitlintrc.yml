@@ -31,6 +31,7 @@ rules:
       - tools
       - utils
       - flags
+      - authors
   subject-empty:
     level: error
   type:
