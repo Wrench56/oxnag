@@ -22,7 +22,8 @@ section .data
     header_msg          db "[      ] Hello from oxnag!", 10
     header_msg_len      equ $ - header_msg
     authors_msg         db "[      ] Made by:", 10, \
-                           "[      ]  > Mark Devenyi <markdevenyidev@gmail.com>", 10
+                           "[      ]  > Mark Devenyi <markdevenyidev@gmail.com>", 10, \
+                           "[      ]  > Matheus Xavier <soft.song@fastmail.net>", 10
     authors_msg_len     equ $ - authors_msg
     window_msg          db "[      ] GUI created (OS specific)", 10
     window_msg_len      equ $ - window_msg
