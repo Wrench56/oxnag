@@ -51,8 +51,6 @@ section .data
 ; ===== [  .TEXT   ] =====
 section .text
 
-; IN: RDI - title string (null-terminated)
-; IN: RSI - message string (null-terminated)
 ; OUT: RAX - bestFbc
 global xpick_best_fb
 xpick_best_fb:
@@ -68,8 +66,8 @@ xpick_best_fb:
 
     ; Check version
     mov             rdi, rbx                                ; Display* dpy
-    lea             rsi, [rel glx_major]                    ; int major
-    lea             rdi, [rel glx_minor]                    ; int minor
+    mov             rsi, glx_major                          ; int major
+    mov             rdx, glx_minor                          ; int minor
     call            glXQueryVersion
 
     test            rax, rax
@@ -94,8 +92,8 @@ xpick_best_fb:
 
     mov             rdi, rbx                                ; Display* dpy
     mov             rsi, rax                                ; int screen
-    mov             rdx, [rel visual_attribs]               ; const int* attrub_list
-    lea             rcx, [rel fbcount]                      ; int* nelements
+    mov             rdx, visual_attribs                     ; const int* attrub_list
+    mov             rcx, fbcount                            ; int* nelements
     call            glXChooseFBConfig                       ; ==> GLXFBConfig*
     test            rax, rax
     je              .bad_fbc
@@ -105,9 +103,13 @@ xpick_best_fb:
 
     mov             r13, rax                                ; STORES[r13]: fbc[]
 
+    mov             rsi, r12
+    shl             rsi, 3                                  ; rsi * 2 * 2 * 2
+    add             r13, rsi
+
 .loop_begin:
     mov             rdi, rbx                                ; Display* dpy
-    mov             rsi, [r13 + r12]                        ; GLXFBConfig config
+    mov             rsi, [r13]                              ; GLXFBConfig config
     call            glXGetVisualFromFBConfig                ; ==> XVisualInfo*
     mov             r14, rax                                ; STORES[r14]: XVisualInfo*
     test            rax, rax
@@ -115,7 +117,7 @@ xpick_best_fb:
 
     ; Get number of samples
     mov             rdi, rbx                                ; Display* dpy
-    mov             rsi, [r13 + r12]                        ; GLXFBConfig config
+    mov             rsi, [r13]                              ; GLXFBConfig config
     mov             rdx, GLX_SAMPLES                        ; int attribute
     lea             rcx, [rel samples]                      ; int* value
     call            glXGetFBConfigAttrib                    ; ==> int
@@ -126,7 +128,7 @@ xpick_best_fb:
 
     ; Check if sample buffer exists
     mov             rdi, rbx
-    mov             rsi, [r13 + r12]
+    mov             rsi, [r13]
     mov             rdx, GLX_SAMPLE_BUFFERS
     lea             rcx, [rel samp_buf]
     call            glXGetFBConfigAttrib
@@ -147,6 +149,10 @@ xpick_best_fb:
     call            XFree                                   ; ==> void
 .loop_end:
     dec             r12
+    ; Use fbc[--i] for the next iteration
+    sub             r13, 8
+
+    test            r12, r12
     jnz             .loop_begin
 
     mov             rax, [rel bestFbc]
