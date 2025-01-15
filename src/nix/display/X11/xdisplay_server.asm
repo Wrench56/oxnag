@@ -51,15 +51,13 @@ section .data
 ; ===== [  .TEXT   ] =====
 section .text
 
-; OUT: RAX - bestFbc
-global xpick_best_fb
+; IN: RDI - *display
+; OUT: RAX - *bestFbc
 xpick_best_fb:
-
-    ; Open X display
-    mov             rdi, NULL
-    call            XOpenDisplay                            ; ==> Display*
-    test            rax, rax
-    jz              .failed_to_open
+    push            rbx
+    push            r12
+    push            r13
+    push            r14
 
     mov             rbx, rax                                ; STORES[rbx]: Display*
     mov             [rel xdisplay], rax
@@ -138,7 +136,7 @@ xpick_best_fb:
     jz              .xfree
 
     ; New best found!
-    mov             rax, [r13 + r12]
+    mov             rax, [r13]
     mov             qword [rel bestFbc], rax
     mov             rax, [rel samples]
     mov             [rel best_num_samp], rax
@@ -155,13 +153,39 @@ xpick_best_fb:
     test            r12, r12
     jnz             .loop_begin
 
+    ; Free fbc[]
+    mov             rdi, r13
+    call            XFree
+
     mov             rax, [rel bestFbc]
+    pop             rbx
+    pop             r12
+    pop             r13
+    pop             r14
+
     ret
 
-.failed_to_open:
-    fatal_error     fatalTitle, failedToOpenMsg
 .bad_version:
     fatal_error     fatalTitle, badVersionMsg
 .bad_fbc:
     fatal_error     fatalTitle, badfbcMsg
+
+
+global xboot_gui
+xboot_gui:
+    ; Open X display
+    mov             rdi, NULL
+    call            XOpenDisplay                            ; ==> Display*
+    test            rax, rax
+    jz              .failed_to_open
+    mov             rbx, rax                                ; STORES[rbx]: Display*
+
+    ; Pick most optimal framebuffer
+    mov             rdi, rbx
+    call            xpick_best_fb
+
+    ret
+
+.failed_to_open:
+    fatal_error     fatalTitle, failedToOpenMsg
 
