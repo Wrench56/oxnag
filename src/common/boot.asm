@@ -50,6 +50,8 @@ section .data
     %define os_spec_boot_gui            call wboot_gui
 %elifidn TARGET_OS, OS_LINUX
     %ifidn DISPLAY_SERVER, DS_XORG
+        extern xboot_gui
+
         %define os_spec_boot
         %define os_spec_boot_gui        call xboot_gui
     %else
