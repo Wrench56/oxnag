@@ -46,9 +46,19 @@ section .data
     extern wboot
     extern wboot_gui
 
-    %define os_spec_boot        call wboot
-    %define os_spec_boot_gui    call wboot_gui
+    %define os_spec_boot                call wboot
+    %define os_spec_boot_gui            call wboot_gui
+%elifidn TARGET_OS, OS_LINUX
+    %ifidn DISPLAY_SERVER, DS_XORG
+        %define os_spec_boot
+        %define os_spec_boot_gui        call xboot_gui
+    %else
+	%error Current display server (DISPLAY_SERVER) for OS_type=TARGET_OS is not implemented
+        %define os_spec_boot
+	%define os_spec_boot_gui
+    %endif
 %else
+    %error No OS_type=TARGET_OS specific boot implemented
     %define os_spec_boot
     %define os_spec_boot_gui
 %endif
