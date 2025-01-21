@@ -59,11 +59,11 @@ xpick_best_fb:
     push            r13
     push            r14
 
-    mov             rbx, rax                                ; STORES[rbx]: Display*
-    mov             [rel xdisplay], rax
+    mov             rbx, rdi                                ; STORES[rbx]: Display*
+    mov             [rel xdisplay], rdi
 
     ; Check version
-    mov             rdi, rbx                                ; Display* dpy
+    ; STORES[rdi]: Display* dpy
     mov             rsi, glx_major                          ; int major
     mov             rdx, glx_minor                          ; int minor
     call            glXQueryVersion
@@ -120,7 +120,7 @@ xpick_best_fb:
     lea             rcx, [rel samples]                      ; int* value
     call            glXGetFBConfigAttrib                    ; ==> int
 
-    mov		    rax, [rel samples]
+    mov             rax, [rel samples]
     cmp             [rel best_num_samp], rax
     jge             .xfree
 
