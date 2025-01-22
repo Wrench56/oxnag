@@ -54,6 +54,8 @@ section .text
 ; IN: RDI - *display
 ; OUT: RAX - *bestFbc
 xpick_best_fb:
+    prologue        0
+
     push            rbx
     push            r12
     push            r13
@@ -163,6 +165,7 @@ xpick_best_fb:
     pop             r13
     pop             r14
 
+    epilogue        0
     ret
 
 .bad_version:
@@ -173,6 +176,8 @@ xpick_best_fb:
 
 global xboot_gui
 xboot_gui:
+    prologue        0
+
     ; Open X display
     mov             rdi, NULL
     call            XOpenDisplay                            ; ==> Display*
@@ -184,6 +189,7 @@ xboot_gui:
     mov             rdi, rbx
     call            xpick_best_fb
 
+    epilogue        0
     ret
 
 .failed_to_open:

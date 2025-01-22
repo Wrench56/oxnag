@@ -38,8 +38,10 @@ section .text
 
 global _start
 _start:
-    sub             rbp, 8
-    prologue        32
+%ifidn TARGET_OS, OS_WINDOWS
+    ; On Windows, the stack is NOT 16 byte aligned by default
+    prologue        0
+%endif
 
     ; Initialize misc OS specific things (e.g. debug console)
     call            boot_process

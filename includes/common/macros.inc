@@ -36,6 +36,8 @@
 ;  > 1: number - stack frame size
 %ifnmacro prologue
     %macro prologue 1
+        ; This is equivalent to `sub rsp, 8` (LLVM optimization)
+        push rax
         %ifidn TARGET_OS, OS_WINDOWS
             sub	rsp, %1
         %endif
@@ -46,6 +48,8 @@
 ;  > 2: number - stack frame size
 %ifnmacro epilogue
     %macro epilogue 1
+        ; This is equivalent to `add rsp, 8` (LLVM optimization)
+        pop rcx
         %ifidn TARGET_OS, OS_WINDOWS
             add rsp, %1
         %endif

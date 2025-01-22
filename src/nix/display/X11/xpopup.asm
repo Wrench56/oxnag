@@ -23,6 +23,7 @@ section .text
 ; IN: RSI - message string (null-terminated)
 global xpopup
 xpopup:
+    prologue        0
 
     ; Save message
     mov             rbx, rsi
@@ -66,4 +67,5 @@ xpopup:
     mov             rdi, command
     call            psystem
 
+    epilogue        0
     ret

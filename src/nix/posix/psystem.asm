@@ -7,6 +7,7 @@ extern access
 
 ; ===== [ INCLUDES ] =====
 %include "includes/common/cdef.inc"
+%include "includes/common/macros.inc"
 %include "includes/posix/unistd.inc"
 
 ; ===== [  .DATA  ] =====
@@ -21,6 +22,8 @@ section .text
 ; OUT: status (check `system()` POSIX man page)
 global psystem
 psystem:
+    prologue        0
+
     test            rdi, rdi
     jz              .access
 
@@ -52,16 +55,19 @@ psystem:
 
     xor             rax, rax
     mov             eax, [rel status]
-    ret
+
+    jmp             .exit
 
 .access:
     mov             rdi, shell_path                           ; const char* pathname
     mov             rsi, X_OK                                 ; int mode
     call            access                                    ; ==> int
 
-    ret
+    jmp             .exit
 
 .fork_fail:
     mov             rax, -1
-    ret
 
+.exit:
+    epilogue        0
+    ret
