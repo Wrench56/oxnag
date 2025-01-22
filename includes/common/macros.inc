@@ -3,6 +3,8 @@
 
 %ifidn TARGET_OS, OS_WINDOWS
     %include "includes/win/macros.inc"
+%elifidn TARGET_OS, OS_LINUX
+    %include "includes/nix/macros.inc"
 %endif
 
 ; Arguments:
@@ -166,13 +168,9 @@
                 ; Seriously, if you are using X on Windows, you are a legend...
                 %error Currently, the X display server is not supported for Windows
             %endif
-            extern xpopup
-
-            mov rdi, %1
-            mov rsi, %2
-            call xpopup
+            nfatal_error %1, %2
         %else
-            %warning The macro `fatal_error` for the current display server is not implemented
+            %error The macro `fatal_error` for the current display server is not implemented
         %endif
     %endmacro
 %endif
