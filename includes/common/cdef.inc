@@ -9,3 +9,5 @@
 %define ptr    resq 1
 %define uint32 resd 1
 %define int32  resd 1
+
+%define sizeof(struc_type_name) (struc_type_name%+_size)
