@@ -74,7 +74,7 @@
             %elif %1 = 4
                 mov     r9, %2
             %elif %1 > 4
-                mov     rsp + ((%1 - 1) * 8), %2
+                mov     [rsp + ((%1 - 1) * 8)], %2
             %else
                 %error Invalid "argxmov" argument number: %1
             %endif
