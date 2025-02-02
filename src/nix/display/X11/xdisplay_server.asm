@@ -7,7 +7,18 @@ extern glXGetVisualFromFBConfig
 extern glXGetFBConfigAttrib
 extern XFree
 
+extern XCreateColormap
+extern XRootWindow
+extern XCreateWindow
+extern XStoreName
+extern XMapWindow
+extern XSync
+
 extern xdisplay
+extern xwindow
+
+extern malloc
+extern free
 
 ; ===== [ INCLUDES ] =====
 
@@ -22,9 +33,11 @@ extern xdisplay
 ; ===== [  .DATA   ] =====
 section .data
     fatalTitle      db "Error: xdisplay_server.asm", 0
-    failedToOpenMsg db "[ xpick_best_fb ] Failed to open display", 0
+    failedToOpenMsg db "[ xboot_gui ] Failed to open display", 0
     badVersionMsg   db "[ xpick_best_fb ] Invalid GLX version", 0
     badfbcMsg       db "[ xpick_best_fb ] Failed to retrieve framebuffer config", 0
+    failInitWndMsg  db "[ xopen_window ] Failed to create X11 Window", 0
+    oxnagTitle      db "OxNAG", 0
     ; TODO: Use "local" variables instead
     glx_major       dd 0
     glx_minor       dd 0
@@ -160,10 +173,10 @@ xpick_best_fb:
     call            XFree
 
     mov             rax, [rel bestFbc]
-    pop             rbx
-    pop             r12
-    pop             r13
     pop             r14
+    pop             r13
+    pop             r12
+    pop             rbx
 
     epilogue        0
     ret
@@ -172,6 +185,98 @@ xpick_best_fb:
     fatal_error     fatalTitle, badVersionMsg
 .bad_fbc:
     fatal_error     fatalTitle, badfbcMsg
+
+
+; IN: RDI - *display
+; IN: RSI - *bestFbc
+global xopen_window
+xopen_window:
+    prologue        0
+
+    push            rbx
+    push            r12
+    push            r13
+    push            r14
+
+    sub             rsp, 6 * 8
+
+    mov             rbx, rdi
+
+    ; STORES[rdi]: Display*
+    ; STORES[rsi]: GLXFBConfig*
+    call            glXGetVisualFromFBConfig                ; ==> XVisualInfo*
+    mov             r12, rax                                ; STORES[r12]: XVisualInfo*
+
+    mov             rdi, rbx                                ; Display* display
+    mov             esi, [r12 + XVisualInfo.screen]         ; int screen_number
+    call            XRootWindow                             ; ==> Window*
+    mov             r13, rax                                ; STORES[r13]: Window*
+
+    mov             rdi, sizeof(XSetWindowAttributes)       ; size_t size
+    call            malloc                                  ; ==> void*
+    mov             r14, rax                                ; STORES[r14]: XSetWindowAttributes*
+
+    mov             qword [r14 + XSetWindowAttributes.border_pixel], 0
+    mov             qword [r14 + XSetWindowAttributes.background_pixmap], None
+    mov             qword [r14 + XSetWindowAttributes.event_mask], StructureNotifyMask
+
+    mov             rdi, rbx                                ; Display* display
+    mov             rsi, r13                                ; Window window
+    mov             rdx, [r12 + XVisualInfo.visual]         ; Visual* visual
+    mov             rcx, AllocNone                          ; int alloc
+    call            XCreateColormap                         ; ==> Colormap*
+    mov             [r14 + XSetWindowAttributes.colormap], rax
+
+    mov             rsi, r13                                ; Window parent
+    mov             edx, 0                                  ; int32 x
+    mov             ecx, 0                                  ; int32 y
+    mov             r8d, 100                                ; uint32 width
+    mov             r9d, 100                                ; uint32 height
+    mov             dword [rsp], 0                          ; uint32 border_width
+    mov             edi, [r12 + XVisualInfo.depth]
+    mov             dword [rsp + 8], edi                    ; int32 depth
+    mov             dword [rsp + 16], InputOutput           ; uint32 class
+    mov             rdi, [r12 + XVisualInfo.visual]
+    mov             [rsp + 24], rdi                         ; Visual* visual
+    mov             rdi, CWBorderPixel | CWColormap | CWEventMask
+    mov             [rsp + 32], rdi                         ; uint64 valuemask
+    mov             [rsp + 40], r14                         ; XSetWindowAttributes* attributes
+    mov             rdi, rbx                                ; Display* display
+    call            XCreateWindow
+    test            rax, rax
+    jz              .fail
+    mov             [rel xwindow], rax
+
+    mov             rdi, rbx
+    mov             rsi, rax
+    mov             rdx, oxnagTitle
+    call            XStoreName
+
+    mov             rdi, rbx
+    mov             rsi, [rel xwindow]
+    call            XMapWindow
+
+    mov             rdi, rbx
+    mov             rsi, 0
+    call            XSync
+
+    ; ===== Cleanup ===== ;
+    mov             rdi, r12
+    call            XFree
+
+    mov             rdi, r14
+    call            free
+
+    add             rsp, 6 * 8
+    pop             r14
+    pop             r13
+    pop             r12
+    pop             rbx
+
+    epilogue        0
+    ret
+.fail:
+    fatal_error     fatalTitle, failInitWndMsg
 
 
 global xboot_gui
@@ -188,6 +293,11 @@ xboot_gui:
     ; Pick most optimal framebuffer
     mov             rdi, rbx
     call            xpick_best_fb
+
+    ; Open X window
+    mov             rdi, rbx
+    mov             rsi, rax
+    call            xopen_window
 
     epilogue        0
     ret
