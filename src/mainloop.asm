@@ -11,12 +11,19 @@ extern glGetError
     extern whandle_win_events
     extern wglswap_buffer
 
-    ; handle_window_event is cross platform
     %define handle_window_event     call whandle_win_events
     %define swap_buffers            call wglswap_buffer
+%elifidn TARGET_OS, OS_LINUX
+    %ifidn DISPLAY_SERVER, DS_XORG
+        extern xglswap_buffer
+
+        %define handle_window_event     xor rax, rax
+        %define swap_buffers            call xglswap_buffer
+    %else
+	    %error SwapBuffer for current display server (DISPLAY_SERVER) for OS_type=TARGET_OS is not implemented
+    %endif
 %else
-    %define handle_window_event
-    %define swap_buffers
+   %error No OS_type=TARGET_OS specific SwapBuffer implemented
 %endif
 
 section .data

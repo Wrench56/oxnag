@@ -1,9 +1,11 @@
 ; ===== [ EXTERNS  ] =====
 extern glXGetProcAddressARB
 extern glXMakeCurrent
+extern glXSwapBuffers
 
 extern XSync
 
+extern xdisplay
 extern xwindow
 
 ; ===== [ INCLUDES ] =====
@@ -76,3 +78,15 @@ xgl_init_context:
     fatal_error     fatalTitle, fatalCCMsg
 .fail_to_mc:
     fatal_error     fatalTitle, fatalMCMsg
+
+
+global xglswap_buffer
+xglswap_buffer:
+    prologue        0
+
+    mov             rdi, [rel xdisplay]                 ; Display* dpy
+    mov             rsi, [rel xwindow]                  ; GLXDrawable drawable
+    call            glXSwapBuffers                      ; ==> void
+
+    epilogue        0
+    ret
