@@ -9,9 +9,9 @@ extern strlen
 extern glGetString
 
 %macro log_gl_string 1
-    mov             rcx, %1
+    argxmov         1, %1
     call            glGetString
-    cmp             rax, 0
+    test            rax, rax
     je              .get_string_fail 
     mov             rdi, rax
     call            strlen
