@@ -14,6 +14,8 @@ extern XStoreName
 extern XMapWindow
 extern XSync
 
+extern xgl_init_context
+
 extern xdisplay
 extern xwindow
 
@@ -105,7 +107,7 @@ xpick_best_fb:
 
     mov             rdi, rbx                                ; Display* dpy
     mov             rsi, rax                                ; int screen
-    mov             rdx, visual_attribs                     ; const int* attrub_list
+    mov             rdx, visual_attribs                     ; const int* attrib_list
     mov             rcx, fbcount                            ; int* nelements
     call            glXChooseFBConfig                       ; ==> GLXFBConfig*
     test            rax, rax
@@ -159,7 +161,7 @@ xpick_best_fb:
 
 .xfree:
     mov             rdi, r14                                ; void* data
-    call            XFree                                   ; ==> void
+    call            XFree                                   ; ==> int
 .loop_end:
     dec             r12
     ; Use fbc[--i] for the next iteration
@@ -242,30 +244,30 @@ xopen_window:
     mov             [rsp + 32], rdi                         ; uint64 valuemask
     mov             [rsp + 40], r14                         ; XSetWindowAttributes* attributes
     mov             rdi, rbx                                ; Display* display
-    call            XCreateWindow
+    call            XCreateWindow                           ; ==> Window
     test            rax, rax
     jz              .fail
     mov             [rel xwindow], rax
 
-    mov             rdi, rbx
-    mov             rsi, rax
-    mov             rdx, oxnagTitle
-    call            XStoreName
+    mov             rdi, rbx                                ; Display* display
+    mov             rsi, rax                                ; Window w
+    mov             rdx, oxnagTitle                         ; char* window_name
+    call            XStoreName                              ; ==> int
 
-    mov             rdi, rbx
-    mov             rsi, [rel xwindow]
-    call            XMapWindow
+    mov             rdi, rbx                                ; Display* display
+    mov             rsi, [rel xwindow]                      ; Window w
+    call            XMapWindow                              ; ==> int
 
-    mov             rdi, rbx
-    mov             rsi, 0
-    call            XSync
+    mov             rdi, rbx                                ; Display* display
+    xor             rsi, rsi                                ; Bool discard
+    call            XSync                                   ; ==> int
 
     ; ===== Cleanup ===== ;
-    mov             rdi, r12
-    call            XFree
+    mov             rdi, r12                                ; void* data
+    call            XFree                                   ; ==> int
 
-    mov             rdi, r14
-    call            free
+    mov             rdi, r14                                ; void* ptr
+    call            free                                    ; ==> void
 
     add             rsp, 6 * 8
     pop             r14
@@ -282,9 +284,11 @@ xopen_window:
 global xboot_gui
 xboot_gui:
     prologue        0
+    push            rbx
+    push            r12
 
     ; Open X display
-    mov             rdi, NULL
+    mov             rdi, NULL                               ; char* display_name
     call            XOpenDisplay                            ; ==> Display*
     test            rax, rax
     jz              .failed_to_open
@@ -293,15 +297,22 @@ xboot_gui:
     ; Pick most optimal framebuffer
     mov             rdi, rbx
     call            xpick_best_fb
+    mov             r12, rax
 
     ; Open X window
     mov             rdi, rbx
-    mov             rsi, rax
+    mov             rsi, r12
     call            xopen_window
 
+	; Initialize OpenGL context
+    mov             rdi, rbx
+    mov             rsi, r12
+	call            xgl_init_context
+
+    pop             r12
+    pop             rbx
     epilogue        0
     ret
 
 .failed_to_open:
     fatal_error     fatalTitle, failedToOpenMsg
-
