@@ -8,10 +8,7 @@ extern glHint
 
 ; ===== [ INCLUDES ] =====
 %include "includes/common/macros.inc"
-%include "includes/common/preprocessors.inc"
 %include "includes/common/opengl.inc"
-
-
 
 ; ===== [  .DATA   ] =====
 section .data

@@ -13,9 +13,6 @@ extern hDC
 %include "includes/win/wingdi.inc"
 %include "includes/win/macros.inc"
 
-%include "includes/common/preprocessors.inc"
-
-
 COLOR_BITS    EQU 32
 
 section .data

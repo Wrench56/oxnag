@@ -24,8 +24,6 @@ extern hInstance
 %include "includes/win/winuser.inc"
 %include "includes/win/macros.inc"
 
-%include "includes/common/preprocessors.inc"
-
 dwExStyle       EQU     WS_EX_APPWINDOW | WS_EX_WINDOWEDGE
 dwStyle         EQU     WS_OVERLAPPEDWINDOW | WS_CLIPSIBLINGS | WS_CLIPCHILDREN
 

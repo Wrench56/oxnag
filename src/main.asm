@@ -26,7 +26,6 @@ extern cleanup
 
 %include "src/flags.inc"
 %include "includes/common/macros.inc"
-%include "includes/common/preprocessors.inc"
 
 %ifidn TARGET_OS, OS_WINDOWS
     %include "includes/win/winuser.inc"
