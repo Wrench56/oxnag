@@ -21,6 +21,8 @@ extern SetForegroundWindow
 extern hInstance
 
 ; ===== [ INCLUDES ] =====
+%include "includes/common/cdef.inc"
+
 %include "includes/win/winuser.inc"
 %include "includes/win/macros.inc"
 

@@ -9,6 +9,8 @@ extern SwapBuffers
 extern hDC
 
 ; ===== [ INCLUDES ] =====
+%include "includes/common/cdef.inc"
+
 %include "includes/win/winuser.inc"
 %include "includes/win/wingdi.inc"
 %include "includes/win/macros.inc"
