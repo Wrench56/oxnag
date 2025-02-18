@@ -1,5 +1,4 @@
 %include "src/flags.inc"
-%include "includes/common/preprocessors.inc"
 
 %ifidn TARGET_OS, OS_WINDOWS
     %include "includes/win/macros.inc"
@@ -60,101 +59,54 @@
 
 ; Arguments:
 ;  > 1: number - argument number
-;  > 2: any    - argument value
-%ifnmacro argxmov
-    %macro argxmov 2
-        %ifidn TARGET_OS, OS_WINDOWS
-            ; Windows x64 ABI
-            %if %1 = 1
-                mov     rcx, %2
-            %elif %1 = 2
-                mov     rdx, %2
-            %elif %1 = 3
-                mov     r8, %2
-            %elif %1 = 4
-                mov     r9, %2
-            %elif %1 > 4
-                mov     [rsp + ((%1 - 1) * 8)], %2
-            %else
-                %error Invalid "argxmov" argument number: %1
-            %endif
-        %elifidn TARGET_OS, OS_LINUX
-            ; System V AMD64 ABI
-            %if %1 = 1
-                mov     rdi, %2
-            %elif %1 = 2
-                mov     rsi, %2
-            %elif %1 = 3
-                mov     rdx, %2
-            %elif %1 = 4
-                mov     rcx, %2
-            %elif %1 = 5
-                mov     r8, %2
-            %elif %1 = 6
-                mov     r9, %2
-            %elif %1 > 6
-                mov     [rsp + 8 * (%1 - 6)], %2
-            %else
-                %error Invalid "argxmov" argument number: %1
-            %endif
-        %else
-            %error Unsupported output format
-        %endif
-    %endmacro
+%ifidn TARGET_OS, OS_WINDOWS
+    ; Windows x64 ABI
+    %define __stack_arg(n) [rsp + 8 * (n + 3)]
+
+    %define __arg1  rcx
+    %define __arg2  rdx
+    %define __arg3  r8
+    %define __arg4  r9
+    %define __arg5  __stack_arg(1)
+    %define __arg6  __stack_arg(2)
+    %define __arg7  __stack_arg(3)
+    %define __arg8  __stack_arg(4)
+    %define __arg9  __stack_arg(5)
+    %define __arg10 __stack_arg(6)
+    %define __arg11 __stack_arg(7)
+    %define __arg12 __stack_arg(8)
+    %define __arg13 __stack_arg(9)
+    %define __arg14 __stack_arg(10)
+    %define __arg15 __stack_arg(11)
+    %define __arg16 __stack_arg(12)
+
+%elifidn TARGET_OS, OS_LINUX
+    ; System V AMD64 ABI
+    %define __stack_arg(n) [rsp + 8 * n]
+
+    %define __arg1  rdi
+    %define __arg2  rsi
+    %define __arg3  rdx
+    %define __arg4  rcx
+    %define __arg5  r8
+    %define __arg6  r9
+    %define __arg7  __stack_arg(1)
+    %define __arg8  __stack_arg(2)
+    %define __arg9  __stack_arg(3)
+    %define __arg10 __stack_arg(4)
+    %define __arg11 __stack_arg(5)
+    %define __arg12 __stack_arg(6)
+    %define __arg13 __stack_arg(7)
+    %define __arg14 __stack_arg(8)
+    %define __arg15 __stack_arg(9)
+    %define __arg16 __stack_arg(10)
+
+%else
+    %error Unsupported output format
 %endif
 
-; Arguments:
-;  > 1: number - argument number
-;  > 2: any    - memory address or value to load
-%ifnmacro argxlea
-    %macro argxlea 2
-        %ifidn TARGET_OS, OS_WINDOWS
-            ; Windows x64 ABI
-            %if %1 = 1
-                lea     rcx, %2
-            %elif %1 = 2
-                lea     rdx, %2
-            %elif %1 = 3
-                lea     r8, %2
-            %elif %1 = 4
-                lea     r9, %2
-            %elif %1 > 4
-                ; TODO: This is relatively slow
-                ;       I don't want to erase some register values though
-                %warning Slow "argxlea" detected for argument %1 (assembling for Windows x64 ABI)
-                xchg    [rsp + 8 * (%1 - 1)], rax
-                lea     rax, %2
-                xchg    [rsp + 8 * (%1 - 1)], rax
-            %else
-                %error Invalid "argxlea" argument number: %1
-            %endif
-        %elifidn TARGET_OS, OS_LINUX
-            ; System V AMD64 ABI
-            %if %1 = 1
-                lea     rdi, %2
-            %elif %1 = 2
-                lea     rsi, %2
-            %elif %1 = 3
-                lea     rdx, %2
-            %elif %1 = 4
-                lea     rcx, %2
-            %elif %1 = 5
-                lea     r8, %2
-            %elif %1 = 6
-                lea     r9, %2
-            %elif %1 > 6
-                %warning Slow "argxlea" detected for argument %1 (assembling for System V AMD64 ABI)
-                xchg    [rsp + 8 * (%1 - 6)], rax
-                lea     rax, %2
-                xchg    [rsp + 8 * (%1 - 6)], rax
-            %else
-                %error Invalid "argxlea" argument number: %1
-            %endif
-        %else
-            %error Unsupported output format
-        %endif
-    %endmacro
-%endif
+%define arg(n) __arg %+ n
+
 
 ; Arguments:
 ;  > 1: string - title
@@ -174,3 +126,4 @@
         %endif
     %endmacro
 %endif
+

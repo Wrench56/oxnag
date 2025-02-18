@@ -22,6 +22,7 @@ extern hInstance
 
 ; ===== [ INCLUDES ] =====
 %include "includes/common/cdef.inc"
+%include "includes/common/macros.inc"
 
 %include "includes/win/winuser.inc"
 %include "includes/win/macros.inc"
@@ -138,14 +139,14 @@ wcreate_win:
     lea             rdx, [rel wndClassName]             ; LPCSTR    lpClassName
     mov             r8, rdi                             ; LPCSTR    lpWindowName
     mov             r9, dwStyle                         ; DWORD     dwStyle
-    mov             qword arg(1), 0                     ; int       X
-    mov             qword arg(2), 0                     ; int       Y
-    mov             qword arg(3), 640                   ; int       nWidth
-    mov             qword arg(4), 480                   ; int       nHeight
-    mov             qword arg(5), NULL                  ; HWND      hWndParent
-    mov             qword arg(6), NULL                  ; HMENU     hMenu
-    mov             qword arg(7), rbx                   ; HINSTANCE hInstance
-    mov             qword arg(8), NULL                  ; LPVOID    lpParam
+    mov             qword arg(5) , 0                    ; int       X
+    mov             qword arg(6) , 0                    ; int       Y
+    mov             qword arg(7) , 640                  ; int       nWidth
+    mov             qword arg(8) , 480                  ; int       nHeight
+    mov             qword arg(9) , NULL                 ; HWND      hWndParent
+    mov             qword arg(10), NULL                 ; HMENU     hMenu
+    mov             qword arg(11), rbx                  ; HINSTANCE hInstance
+    mov             qword arg(12), NULL                 ; LPVOID    lpParam
 
     call            CreateWindowExA
 
@@ -186,7 +187,7 @@ whandle_win_events:
     mov             rdx, NULL                           ; HWND hWnd
     mov             r8, 0                               ; UINT wMsgFilterMin
     mov             r9, 0                               ; UINT wMsgFilterMin
-    mov             qword arg(1), PM_REMOVE             ; UINT wRemoveMessage
+    mov             qword arg(5), PM_REMOVE             ; UINT wRemoveMessage
 
     call            PeekMessageA
 

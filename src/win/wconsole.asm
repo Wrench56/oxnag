@@ -61,7 +61,7 @@ wprint:
     mov             rdx, rdi
     mov             r8, rsi
     mov             r9, NULL
-    mov             qword arg(1), NULL
+    mov             qword arg(5), NULL
     call            WriteConsoleA
 
     leave

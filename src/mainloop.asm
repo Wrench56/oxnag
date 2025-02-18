@@ -52,7 +52,7 @@ mainloop:
     jne             .gl_error
 
     ; Draw OpenGL screen
-    argxmov         1, GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT
+    mov             arg(1), GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT
     call            glClear
 
     ; Reset the current Modelview matrix

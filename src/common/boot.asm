@@ -8,7 +8,7 @@ extern strlen
 extern glGetString
 
 %macro log_gl_string 1
-    argxmov         1, %1
+    mov             arg(1), %1
     call            glGetString
     test            rax, rax
     je              .get_string_fail 

@@ -14,10 +14,10 @@
 %define LOG_TO_CONSOLE
 
 ; Specify which OS to compile for
-%define TARGET_OS OS_WINDOWS
+%define TARGET_OS OS_LINUX
 
 ; Display server
-%define DISPLAY_SERVER DS_WIND
+%define DISPLAY_SERVER DS_XORG
 
 
 ; ============= [Constants] =============
