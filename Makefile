@@ -45,7 +45,7 @@ ifeq ($(PLATFORM),win)
     ASM_FLAGS := -f win64 -g
     LINKER := link
     LINKER_FLAGS := /NOLOGO /ENTRY:_start /SUBSYSTEM:WINDOWS /MACHINE:X64 /DEBUG -out:$(EXE)
-    LIB_DIR := ./libs/win
+    LIB_DIR := ./libs/win/lib
     LIBS := $(wildcard $(LIB_DIR)/*.lib)
 else
     PLATFORM_DIR := $(SRC_DIR)/nix
