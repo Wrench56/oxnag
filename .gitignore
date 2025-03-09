@@ -5,7 +5,7 @@ build
 playground
 
 # Ignore commitlint executable
-tools/commitlint.*
+tools/commitlint*
 
 # Ignore ccls LSP cache
 .ccls-cache/
