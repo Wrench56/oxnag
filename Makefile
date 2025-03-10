@@ -45,8 +45,8 @@ ifeq ($(PLATFORM),win)
     ASM_FLAGS := -f win64 -g
     LINKER := link
     LINKER_FLAGS := /NOLOGO /ENTRY:_start /SUBSYSTEM:WINDOWS /MACHINE:X64 /DEBUG -out:$(EXE)
-    LIB_DIR := ./libs/win/lib
-    LIBS := $(wildcard $(LIB_DIR)/*.lib)
+    PLATFORM_LIB_DIR := ./libs/win
+    PLATFORM_LINK_LIBS := $(wildcard $(PLATFORM_LIB_DIR)/lib/*.lib)
 else
     PLATFORM_DIR := $(SRC_DIR)/nix
     EXE := $(BUILD_DIR)/oxnag
@@ -54,8 +54,8 @@ else
     ASM_FLAGS := -f elf64 -g
     LINKER := ld
     LINKER_FLAGS := --dynamic-linker /lib64/ld-linux-x86-64.so.2 -o $(EXE) -e _start --copy-dt-needed-entries -lc -lGL
-    LIB_DIR := ./libs/nix
-    LIBS := $(wildcard $(LIB_DIR)/*.a) -lc -lGL
+    PLATFORM_LIB_DIR := ./libs/nix
+    PLATFORM_LINK_LIBS := $(wildcard $(PLATFORM_LIB_DIR)/lib/*.a) $(wildcard $(PLATFORM_LIB_DIR)/lib/*.so)
 endif
 
 # Display Backend Specific Sources
@@ -69,6 +69,7 @@ endif
 # Source and Object Files
 COMMON_SRCS := $(wildcard $(SRC_DIR)/*.asm) $(wildcard $(COMMON_DIR)/*.asm)
 PLATFORM_SRCS += $(wildcard $(PLATFORM_DIR)/*.asm)
+ALL_LIB_DIRS := $(filter-out $(PLATFORM_LIB_DIR)/lib, $(wildcard $(PLATFORM_LIB_DIR)/*)) $(wildcard ./libs/common/*)
 ifeq ($(PLATFORM),nix)
     PLATFORM_SRCS += $(wildcard $(PLATFORM_DIR)/posix/*.asm)
 endif
@@ -77,7 +78,7 @@ ALL_SRCS := $(COMMON_SRCS) $(PLATFORM_SRCS) $(UTIL_SRCS)
 ALL_OBJS := $(patsubst %.asm, $(BUILD_DIR)/%.o, $(notdir $(ALL_SRCS)))
 
 # Targets
-.PHONY: all clean run size help win nix x11 wayland dswind compile link banner
+.PHONY: all clean run size help win nix x11 wayland dswind compile compile_libraries link banner
 
 # Default Target
 all: banner $(PLATFORM)
@@ -117,10 +118,22 @@ compile:
 		echo "Compiled: $$SRC"; \
 	done
 
+compile_libraries:
+	@printf "\n=============[ LIBRARIES ]=============\n"
+	@for LIB in $(ALL_LIB_DIRS); do \
+		( cd $$LIB && make && cp build/*.o ../../../build ) > /dev/null; \
+		EXIT_CODE=$$?; \
+		if [ $$EXIT_CODE -ne 0 ]; then \
+			echo "Error:    $$LIB (exit code $$EXIT_CODE)"; \
+		else \
+			echo "Built:    $$LIB"; \
+		fi; \
+	done
+
 # Link Object Files
 link:
 	@printf "\n==============[ LINKING ]==============\n"
-	@$(LINKER) $(LINKER_FLAGS) $(ALL_OBJS) $(LIBS)
+	@$(LINKER) $(LINKER_FLAGS) $(ALL_OBJS) $(PLATFORM_LINK_LIBS)
 
 # Run Executable
 run: $(EXE)
@@ -152,6 +165,7 @@ targets:
  * wayland              Build with Wayland display backend
  * dswind               Build with dswind backend (default for Windows)
  * compile              Compile all sources (current platform)
+ * compile_libraries    Compile all libraries (current platform and common)
  * link                 Link all object files (current platform)
  * run                  Run the application
  * size                 Fetch the size of the application
@@ -160,16 +174,17 @@ targets:
 endef
 
 # Windows Build
-win: banner check_duplicates compile link run size
+win: banner check_duplicates compile compile_libraries link run size
 
 # *nix Build
-nix: banner check_duplicates compile link run size
+nix: banner check_duplicates compile compile_libraries link run size
 
 # X11 Display Backend Build
-x11: banner check_duplicates compile link run size
+x11: banner check_duplicates compile compile_libraries link run size
 
 # Wayland Display Backend Build
-wayland: banner check_duplicates compile link run size
+wayland: banner check_duplicates compile compile_libraries link run size
 
 # dswind Display Backend Build
-dswind: banner check_duplicates compile link run size
+dswind: banner check_duplicates compile compile_libraries link run size
+
