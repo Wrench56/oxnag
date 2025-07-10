@@ -67,7 +67,7 @@ ifeq ($(DISPLAY_BACKEND),wayland)
 endif
 
 # Source and Object Files
-COMMON_SRCS := $(wildcard $(SRC_DIR)/*.asm) $(wildcard $(COMMON_DIR)/*.asm)
+COMMON_SRCS := $(wildcard $(SRC_DIR)/*.asm) $(wildcard $(COMMON_DIR)/*.asm) $(wildcard $(COMMON_DIR)/**/*.asm)
 PLATFORM_SRCS += $(wildcard $(PLATFORM_DIR)/*.asm)
 ALL_LIB_DIRS := $(filter-out $(PLATFORM_LIB_DIR)/lib, $(wildcard $(PLATFORM_LIB_DIR)/*)) $(wildcard ./libs/common/*)
 ifeq ($(PLATFORM),nix)
@@ -75,7 +75,6 @@ ifeq ($(PLATFORM),nix)
 endif
 UTIL_SRCS := $(wildcard $(SRC_DIR)/utils/*.asm)
 ALL_SRCS := $(COMMON_SRCS) $(PLATFORM_SRCS) $(UTIL_SRCS)
-ALL_OBJS := $(patsubst %.asm, $(BUILD_DIR)/%.o, $(notdir $(ALL_SRCS)))
 
 # Targets
 .PHONY: all clean run size help win nix x11 wayland dswind compile compile_libraries link banner
@@ -133,7 +132,7 @@ compile_libraries:
 # Link Object Files
 link:
 	@printf "\n==============[ LINKING ]==============\n"
-	@$(LINKER) $(LINKER_FLAGS) $(ALL_OBJS) $(PLATFORM_LINK_LIBS)
+	@$(LINKER) $(LINKER_FLAGS) $(wildcard $(BUILD_DIR)/*.o) $(PLATFORM_LINK_LIBS)
 
 # Run Executable
 run: $(EXE)
