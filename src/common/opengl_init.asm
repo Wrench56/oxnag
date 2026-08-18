@@ -17,8 +17,7 @@ section .data
     BG_BLUE         dd 1.0
     BG_ALPHA        dd 0.5
 
-    BG_CLEAR_DEPTH  dd 1.0
-
+    BG_CLEAR_DEPTH  dq 1.0
 
 ; ===== [  .TEXT   ] =====
 section .text
@@ -35,7 +34,7 @@ glinit:
     movss           xmm3, [rel BG_ALPHA]
     call            glClearColor
 
-    movss           xmm0, [rel BG_CLEAR_DEPTH]
+    movsd           xmm0, [rel BG_CLEAR_DEPTH]
     call            glClearDepth
 
     mov             arg(1), GL_DEPTH_TEST
