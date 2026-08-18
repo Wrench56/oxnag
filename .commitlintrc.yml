@@ -32,6 +32,7 @@ rules:
       - utils
       - flags
       - models
+      - shaders
       - authors
   subject-empty:
     level: error
