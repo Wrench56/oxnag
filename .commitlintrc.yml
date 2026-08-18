@@ -31,6 +31,7 @@ rules:
       - tools
       - utils
       - flags
+      - models
       - authors
   subject-empty:
     level: error
