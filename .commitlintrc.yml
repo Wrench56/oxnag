@@ -33,6 +33,7 @@ rules:
       - flags
       - models
       - shaders
+      - assets
       - authors
   subject-empty:
     level: error
